@@ -5,10 +5,6 @@ import json
 from urllib.request import urlopen
 import mechanicalsoup
 
-class colors :
-	GREEN = '\033[92m'
-	ENDG = '\033[0m'
-
 def parse_iphonewiki(url2parse, img_type):
 	br = mechanicalsoup.StatefulBrowser()
 	html = br.open(url2parse)
@@ -26,7 +22,8 @@ def parse_iphonewiki(url2parse, img_type):
 				"ibss-iv", "ibss-key", "kernelcache-iv",
 				"kernelcache-key", "llb-iv", "llb-key",
 				"recoverymode-iv", "recoverymode-key",
-				"sepfirmware-iv", "sepfirmware-key"]
+				"sepfirmware-iv", "sepfirmware-key"
+			]
 	j = 0
 	key = ""
 	for i in range(0, len(keypage)):
@@ -45,7 +42,9 @@ def parse_iphonewiki(url2parse, img_type):
 def version_or_build(model, version, build):
 	get_buildid = False
 	get_version = False
+
 	json_file = urlopen("https://api.ipsw.me/v4/device/" + model)
+
 	with open(model, 'wb') as output:
 		output.write(json_file.read())
 

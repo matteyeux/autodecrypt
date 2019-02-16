@@ -26,7 +26,6 @@ def extract_and_clean(zipper, zip_path, filename):
 
 # boring part of the code.
 # TODO : find a better way
-# not tested yet with SEP
 def get_image_type_name(image):
 	image = image.decode("utf-8")
 	if image == "ogol" or image == "logo":
@@ -57,6 +56,8 @@ def get_image_type_name(image):
 		img_type = "ibec"
 	elif image == "lnrk" or image == "krnl" :
 		img_type = "kernelcache"
+	elif image == "sepi" :
+		img_type = "sepfirmware"
 	else :
 		print("image type not supported : %s" % image)
 		img_type = None
@@ -65,11 +66,12 @@ def get_image_type_name(image):
 def usage(tool):
 	print("usage : %s -f <img file> -i [iOS version] -d [device]" % tool)
 	print("options : ")
-	print("-f [IMG file]\t\t set img file you want to decrypt")
-	print("-i |iOS version]\t iOS version for the said file")
-	print("-b [build version]\t build ID for the said file (optional)")
-	print("-d [device]\t\t set device ID (eg : iPhone8,1)")
-	print("-l \t\t\t local mode, it does not download firmware image")
+	print(" -f [IMG file]\t\t set img file you want to decrypt")
+	print(" -i |iOS version]\t iOS version for the said file")
+	print(" -b [build version]\t build ID for the said file (optional)")
+	print(" -d [device]\t\t set device ID (eg : iPhone8,1)")
+	print(" -l \t\t\t local mode, it does not download firmware image")
+	print(" -beta\t\t\t specify beta version")
 
 if __name__ == '__main__':
 	argv = sys.argv
@@ -80,6 +82,7 @@ if __name__ == '__main__':
 	build = None
 	codename = None
 	local = False
+	beta = False
 
 	if argc < 7:
 		usage(argv[0])
@@ -99,20 +102,23 @@ if __name__ == '__main__':
 			codename = argv[i + 1]
 		elif argv[i] == "-l":
 			local = True
+		elif argv[i] == "-beta":
+			beta = True
 		elif argv[i] == "-h":
 			usage(argv[0])
 
-	if set_ios_version is True:
-		build = scrapkeys.version_or_build(device, ios_version, build)
-	else:
-		ios_version = scrapkeys.version_or_build(device, ios_version, build)
+	if beta is not True:
+		if set_ios_version is True:
+			build = scrapkeys.version_or_build(device, ios_version, build)
+		else:
+			ios_version = scrapkeys.version_or_build(device, ios_version, build)
 
 	if codename is None:
 		codename = scrapkeys.get_codename(device, ios_version, build)
 
 	# sometimes you already have the file
 	if local is not True:
-		ipsw_url = ipsw_dl.parse_json(device, ios_version)[0]
+		ipsw_url = ipsw_dl.parse_json(device, ios_version, build, beta)[0]
 
 		print("[i] downloading %s" % file)
 		grab_file(ipsw_url, file)
@@ -125,6 +131,7 @@ if __name__ == '__main__':
 	print("[i] image : %s" % image_name)
 	print("[i] grabbing keys from %s" % url)
 	image_keys = scrapkeys.parse_iphonewiki(url, image_name)
+
 	iv = image_keys[:32]
 	key = image_keys[-64:]
 	print("[x] iv  : %s" % iv)
