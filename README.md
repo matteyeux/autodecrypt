@@ -1,6 +1,13 @@
 # autodecrypt
 Simple tool to decrypt iOS firmware images
 
+Going to the iPhone wiki and copying and pasting firmware keys to your terminal is boring.
+
+autodecrypt will grab keys for you and decrypt the firmware image you want.
+
+
+
+
 #### Usage
 ```
 usage : ./autodecrypt.py -f <img file> -i [iOS version] -d [device]
@@ -12,6 +19,8 @@ options :
  -l 			 local mode, it does not download firmware image
  -beta			 specify beta version
 ```
+
+By default it automatically downloads image file from apple.com using ipsw.me API.
 
 #### Dependencies
 - Python3
