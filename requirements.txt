@@ -1,0 +1,4 @@
+clint
+requests
+mechanicalsoup
+remotezip
