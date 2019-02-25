@@ -16,7 +16,10 @@ def grab_file(url, filename):
 		for fname in filenames:
 			zinfo = zip.getinfo(fname)
 			if filename in zinfo.filename and not ".plist" in zinfo.filename:
+				filename = zinfo.filename.split("/")[-1]
+				print("[i] downloading %s" % filename)
 				extract_and_clean(zip, zinfo.filename, filename)
+				return filename
 
 def extract_and_clean(zipper, zip_path, filename):
 	zipper.extract(zip_path)
@@ -120,8 +123,7 @@ if __name__ == '__main__':
 	if local is not True:
 		ipsw_url = ipsw_dl.parse_json(device, ios_version, build, beta)[0]
 
-		print("[i] downloading %s" % file)
-		grab_file(ipsw_url, file)
+		file = grab_file(ipsw_url, file)
 
 	url = "https://www.theiphonewiki.com/wiki/" + codename + "_" + build + "_" + "(" + device + ")"
 
