@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # code from https://github.com/kennytm/Miscellaneous/blob/master/ipsw_decrypt.py
-# not licensed under MIT as I don't the initial license 
+# not licensed under MIT as I don't know the initial license
 import os
 import sys
 from struct import Struct
