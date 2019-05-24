@@ -27,44 +27,32 @@ def extract_and_clean(zipper, zip_path, filename):
 		os.rename(zip_path, filename)
 		shutil.rmtree(zip_path.split('/')[0])
 
-# boring part of the code.
-# TODO : find a better way
+image_types = [
+	["ogol", "logo", "applelogo"],
+	["0ghc", "chg0", "batterycharging0"],
+	["1ghc", "chg1", "batterycharging1"],
+	["Ftab", "batF", "Ftab"],
+	["Ftab", "batF", "batteryfull"],
+	["0tab", "bat0", "batterylow0"],
+	["1tab", "bat1", "batterylow1"],
+	["ertd", "dtre", "devicetree"],
+	["Cylg", "glyC", "glyphcharging"],
+	["Pylg", "glyP", "glyphplugin"],
+	["tobi", "ibot", "iboot"],
+	["blli", "illb", "llb"],
+	["ssbi", "ibss", "ibss"],
+	["cebi", "ibec", "ibec"],
+	["lnrk", "krnl", "kernelcache"],
+	["sepi", "sepi", "sepfirmware"]
+]
+
 def get_image_type_name(image):
 	image = image.decode("utf-8")
-	if image == "ogol" or image == "logo":
-		img_type = "applelogo"
-	elif image == "0ghc" or image == "chg0":
-		img_type = "batterycharging0"
-	elif image == "1ghc" or image ==  "chg1":
-		img_type = "batterycharging1"
-	elif image == "Ftab" or image == "batF":
-		img_type = "batteryfull"
-	elif image == "0tab" or image == "bat0":
-		img_type = "batterylow0"
-	elif image == "1tab" or image == "bat1":
-		img_type = "batterylow1"
-	elif image == "ertd" or image == "dtre":
-		img_type = "devicetree"
-	elif image == "Cylg" or image == "glyC":
-		img_type = "glyphcharging"
-	elif image == "Pylg" or image == "glyP":
-		img_type = "glyphplugin"
-	elif image == "tobi" or image == "ibot":
-		img_type = "iboot"
-	elif image == "blli" or image == "illb":
-		img_type = "llb"
-	elif image == "ssbi" or image == "ibss":
-		img_type = "ibss"
-	elif image == "cebi" or image == "ibec":
-		img_type = "ibec"
-	elif image == "lnrk" or image == "krnl" :
-		img_type = "kernelcache"
-	elif image == "sepi" :
-		img_type = "sepfirmware"
-	else :
-		print("image type not supported : %s" % image)
-		img_type = None
-	return img_type
+	for i in range(0, len(image_types)):
+		if image == image_types[i][0] or image == image_types[i][1]:
+			img_type = image_types[i][2]
+			return img_type
+	return None
 
 def usage(tool):
 	if '/' in tool :
