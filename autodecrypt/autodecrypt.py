@@ -67,7 +67,11 @@ def get_image_type_name(image):
 	return img_type
 
 def usage(tool):
-	print("usage : %s -f <img file> -i [iOS version] -d [device]" % tool)
+	if '/' in tool :
+		name = tool.split('/')
+		name = name[len(name) - 1]
+
+	print("usage : %s -f <img file> -i [iOS version] -d [device]" % name)
 	print("options : ")
 	print(" -f [IMG file]\t\t set img file you want to decrypt")
 	print(" -i |iOS version]\t iOS version for the said file")
