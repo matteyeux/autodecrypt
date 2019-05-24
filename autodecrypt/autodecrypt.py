@@ -7,8 +7,8 @@ from remotezip import RemoteZip
 
 sys.path.insert(0, ".")
 import decrypt_img
-import scrapkeys
-import ipsw_dl
+from scrapkeys import KeyGrabber
+from ipsw_dl import IpswDownloader
 
 def grab_file(url, filename):
 	with RemoteZip(url) as zip:
@@ -110,6 +110,8 @@ if __name__ == '__main__':
 		elif argv[i] == "-h":
 			usage(argv[0])
 
+	scrapkeys = KeyGrabber()
+
 	if beta is not True:
 		if set_ios_version is True:
 			build = scrapkeys.version_or_build(device, ios_version, build)
@@ -121,7 +123,8 @@ if __name__ == '__main__':
 
 	# sometimes you already have the file
 	if local is not True:
-		ipsw_url = ipsw_dl.parse_json(device, ios_version, build, beta)[0]
+		ipsw = IpswDownloader()
+		ipsw_url = ipsw.parse_json(device, ios_version, build, beta)[0]
 
 		file = grab_file(ipsw_url, file)
 
