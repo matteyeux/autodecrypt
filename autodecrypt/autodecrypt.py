@@ -1,9 +1,10 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 import sys
 import os
 import zipfile
 import shutil
 from remotezip import RemoteZip
+from optparse import OptionParser
 
 sys.path.insert(0, ".")
 import decrypt_img
@@ -54,69 +55,55 @@ def get_image_type_name(image):
 			return img_type
 	return None
 
-def usage(tool):
-	if '/' in tool :
-		name = tool.split('/')
-		name = name[len(name) - 1]
-
-	print("usage : %s -f <img file> -i [iOS version] -d [device]" % name)
-	print("options : ")
-	print(" -f [IMG file]\t\t set img file you want to decrypt")
-	print(" -i |iOS version]\t iOS version for the said file")
-	print(" -b [build version]\t build ID for the said file (optional)")
-	print(" -d [device]\t\t set device ID (eg : iPhone8,1)")
-	print(" -l \t\t\t local mode, it does not download firmware image")
-	print(" -beta\t\t\t specify beta version")
+parser = OptionParser()
+def parse_arguments():
+	parser.add_option("-f", "--file", dest="img_file", help="img file you want to decrypt")
+	parser.add_option("-d","--device", dest="device", help="device ID  (eg : iPhone8,1)")
+	parser.add_option("-i","--ios", dest="ios_version", help="iOS version for the said file")
+	parser.add_option("-b","--build", dest="build_id", help="build ID to set instead of iOS version")
+	parser.add_option("-c","--codename", dest="codename", help="codename of iOS version")
+	parser.add_option("-l","--local", action='store_true', help="don't download firmware image")
+	parser.add_option("--beta", action='store_true', help="specify beta version")
+	(options, args) = parser.parse_args()
+	return options, args
 
 if __name__ == '__main__':
 	argv = sys.argv
 	argc = len(argv)
 	set_ios_version = False
-	ios_version = None
 	device = None
 	build = None
 	codename = None
-	local = False
-	beta = False
 
+	options, args = parse_arguments()
 	if argc < 7:
-		usage(argv[0])
+		parser.print_help()
 		sys.exit(1)
 
-	for i in range(0, argc):
-		if argv[i] == "-f" :
-			file = argv[i + 1]
-		elif argv[i] == "-i":
-			ios_version = argv[i + 1]
-			set_ios_version = True
-		elif argv[i] == "-b":
-			build = argv[i + 1]
-		elif argv[i] == "-d":
-			device = argv[i + 1]
-		elif argv[i] == "-c":
-			codename = argv[i + 1]
-		elif argv[i] == "-l":
-			local = True
-		elif argv[i] == "-beta":
-			beta = True
-		elif argv[i] == "-h":
-			usage(argv[0])
+	file = options.img_file
+	device = options.device
+
+	if options.ios_version is not None:
+		ios_version = options.ios_version
+
+	if options.build_id is not None:
+		build = options.build_id
 
 	scrapkeys = KeyGrabber()
 
-	if beta is not True:
-		if set_ios_version is True:
+	if options.beta is not True:
+		if options.ios_version is not None:
 			build = scrapkeys.version_or_build(device, ios_version, build)
 		else:
 			ios_version = scrapkeys.version_or_build(device, ios_version, build)
 
-	if codename is None:
+	if options.codename is None:
 		codename = scrapkeys.get_codename(device, ios_version, build)
 
 	# sometimes you already have the file
-	if local is not True:
+	if options.local is not True:
 		ipsw = IpswDownloader()
-		ipsw_url = ipsw.parse_json(device, ios_version, build, beta)[0]
+		ipsw_url = ipsw.parse_json(device, ios_version, build, options.beta)[0]
 
 		file = grab_file(ipsw_url, file)
 
