@@ -12,6 +12,7 @@ from scrapkeys import KeyGrabber
 from ipsw_dl import IpswDownloader
 
 def grab_file(url, filename):
+	filename = None
 	with RemoteZip(url) as zip:
 		filenames = zip.namelist()
 		for fname in filenames:
@@ -21,6 +22,7 @@ def grab_file(url, filename):
 				print("[i] downloading %s" % filename)
 				extract_and_clean(zip, zinfo.filename, filename)
 				return filename
+		return filename
 
 def extract_and_clean(zipper, zip_path, filename):
 	zipper.extract(zip_path)

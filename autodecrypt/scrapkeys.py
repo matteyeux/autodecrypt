@@ -58,19 +58,25 @@ class KeyGrabber:
 		i = 0
 
 		with open(device):
-			while True:
-				if get_buildid is True:
-					result = data["firmwares"][i]["buildid"]
-					ios_version = data["firmwares"][i]["version"]
-					if ios_version == version:
-						break
+			try :
+				while True:
+					if get_buildid is True:
+						result = data["firmwares"][i]["buildid"]
+						ios_version = data["firmwares"][i]["version"]
+						if ios_version == version:
+							break
 
-				elif get_version is True:
-					buildid = data["firmwares"][i]["buildid"]
-					result= data["firmwares"][i]["version"]
-					if build == buildid:
-						break
-				i += 1
+					elif get_version is True:
+						buildid = data["firmwares"][i]["buildid"]
+						result= data["firmwares"][i]["version"]
+						if build == buildid:
+							break
+					i += 1
+			except:
+				print("[e] version not found")
+				os.remove(device)
+				sys.exit(-1)
+
 		os.remove(device)
 		return result
 

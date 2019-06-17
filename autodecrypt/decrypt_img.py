@@ -10,6 +10,9 @@ tag_unpack = Struct('<4s2I').unpack
 kbag_unpack = Struct('<2I16s').unpack
 
 def get_image_type(filename):
+	if not os.path.isfile(filename):
+		print("[e] %s : file not found" % filename)
+		sys.exit(-1)
 	with open(filename, 'rb') as file:
 		# set the pointer to 
 		# the beginning of the file

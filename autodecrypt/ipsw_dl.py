@@ -31,7 +31,6 @@ def get_filename(url):
 	return url[position:]
 
 class IpswDownloader:
-
 	# download and parse json file
 	def parse_json(self, model, version, build=None, isbeta=False):
 		json_file = model + ".json"
