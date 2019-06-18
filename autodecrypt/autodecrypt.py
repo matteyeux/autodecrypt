@@ -114,6 +114,9 @@ if __name__ == '__main__':
 	magic, image_type = decrypt_img.get_image_type(file)
 	image_name = get_image_type_name(image_type)
 
+	if image_name is None:
+		print("[e] image type not found")
+
 	print("[i] image : %s" % image_name)
 	print("[i] grabbing keys from %s" % url)
 	image_keys = scrapkeys.parse_iphonewiki(url, image_name)
