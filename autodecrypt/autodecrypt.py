@@ -75,6 +75,7 @@ if __name__ == '__main__':
 	device = None
 	build = None
 	codename = None
+	ios_version = None
 
 	options, args = parse_arguments()
 	if argc < 7:
