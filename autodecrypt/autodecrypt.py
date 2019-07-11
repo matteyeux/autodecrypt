@@ -12,7 +12,6 @@ from scrapkeys import KeyGrabber
 from ipsw_dl import IpswDownloader
 
 def grab_file(url, filename):
-	filename = None
 	with RemoteZip(url) as zip:
 		filenames = zip.namelist()
 		for fname in filenames:
