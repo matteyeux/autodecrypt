@@ -5,9 +5,6 @@ Going to the iPhone wiki and copying and pasting firmware keys to your terminal 
 
 autodecrypt will grab keys for you and decrypt the firmware image you want.
 
-
-
-
 #### Usage
 ```
 usage : ./autodecrypt.py -f <img file> -i [iOS version] -d [device]
