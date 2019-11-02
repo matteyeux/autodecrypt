@@ -81,6 +81,7 @@ def parse_arguments():
     parser.add_argument("-c","--codename", dest="codename", help="codename of iOS version")
     parser.add_argument("-l","--local", action='store_true', help="don't download firmware image")
     parser.add_argument("--beta", action='store_true', help="specify beta firmware")
+    parser.add_argument("--download", action='store_true', help="download firmware image")
 
     return parser.parse_args()
 
@@ -125,6 +126,11 @@ def main():
 
         logging.info("downloading {}...".format(parser.img_file))
         parser.img_file = grab_file(ipsw_url, parser.img_file)
+
+        # Just download image file
+        # won't decrypt
+        if parser.download is True:
+            return 0
 
     url = "https://www.theiphonewiki.com/wiki/" + codename + "_" + build + "_" + "(" + parser.device + ")"
 
