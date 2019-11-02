@@ -14,6 +14,7 @@ import decrypt_img
 from scrapkeys import KeyGrabber
 from ipsw_dl import IpswDownloader
 
+__author__ = "matteyeux"
 
 logging.basicConfig(filename="autodecrypt.log",
                     format='%(asctime)s %(message)s',
