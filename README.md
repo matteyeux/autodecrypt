@@ -8,7 +8,7 @@ autodecrypt will grab keys for you and decrypt the firmware image you want.
 #### Usage
 ```
 usage: autodecrypt.py [-h] -f IMG_FILE -d DEVICE [-i IOS_VERSION]
-                      [-b BUILD_ID] [-c CODENAME] [-l] [--beta]
+                      [-b BUILD_ID] [-c CODENAME] [-l] [--beta] [--download]
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -24,6 +24,7 @@ optional arguments:
                         codename of iOS version
   -l, --local           don't download firmware image
   --beta                specify beta firmware
+  --download            download firmware image
 ```
 
 By default it automatically downloads image file from apple.com using ipsw.me API.
@@ -60,9 +61,22 @@ Decrypting iBoot from iOS 12.2 beta 2. To decrypt beta firmware images, use `-b`
 [x] done
 ```
 
+#### Log
+
+For debugging purposes you can check `autodecrypt.log` :
+```
+11/02/2019 21:39:41 Launching "['autodecrypt/autodecrypt.py', '-d', 'iPhone9,3', '-f', 'iBoot', '-i', '12.3.1']"
+11/02/2019 21:39:41 requesting IPSW's API for iPhone9,3
+11/02/2019 21:39:41 done, now looking for version or build
+11/02/2019 21:39:41 grabbing firmware codename for 16F203
+11/02/2019 21:39:42 codename : PeaceF
+11/02/2019 21:39:42 grabbing IPSW file URL for iPhone9,3/12.3.1
+11/02/2019 21:39:42 downloading iBoot...
+11/02/2019 21:39:43 img4 -i iBoot.d10.RELEASE.im4p iBoot.d10.RELEASE.im4p.dec 978fd4680cd4b624b0dfea22a417f51f0ee2b871defed42277fe18885053b1eb5c7ffe82f38ab8cf7772c69a0db5d386
+```
+
 #### TODO
 - [ ] test on Apple Watch firmwares
-- [ ] catch all errors
 
 ### Credits
 - kennytm for img3 stuff
