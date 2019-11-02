@@ -7,14 +7,23 @@ autodecrypt will grab keys for you and decrypt the firmware image you want.
 
 #### Usage
 ```
-usage : ./autodecrypt.py -f <img file> -i [iOS version] -d [device]
-options : 
- -f [IMG file]		 set img file you want to decrypt
- -i |iOS version]	 iOS version for the said file
- -b [build version]	 build ID for the said file (optional)
- -d [device]		 set device ID (eg : iPhone8,1)
- -l 			 local mode, it does not download firmware image
- -beta			 specify beta version
+usage: autodecrypt.py [-h] -f IMG_FILE -d DEVICE [-i IOS_VERSION]
+                      [-b BUILD_ID] [-c CODENAME] [-l] [--beta]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -f IMG_FILE, --file IMG_FILE
+                        img file you want to decrypt
+  -d DEVICE, --device DEVICE
+                        device ID (eg : iPhone8,1)
+  -i IOS_VERSION, --ios IOS_VERSION
+                        iOS version for the said file
+  -b BUILD_ID, --build BUILD_ID
+                        build ID to set instead of iOS version
+  -c CODENAME, --codename CODENAME
+                        codename of iOS version
+  -l, --local           don't download firmware image
+  --beta                specify beta firmware
 ```
 
 By default it automatically downloads image file from apple.com using ipsw.me API.
@@ -41,7 +50,7 @@ Decrypting SEP from iOS 10.3.3
 
 Decrypting iBoot from iOS 12.2 beta 2. To decrypt beta firmware images, use `-b`, `-i` and `-beta` flags the tool will parse OTA json.
 ```
-./autodecrypt.py -f iBoot.n56.RELEASE.im4p -b 16E5191d -i 12.2 -d iPhone7,1 -beta
+./autodecrypt.py -f iBoot.n56.RELEASE.im4p -b 16E5191d -i 12.2 -d iPhone7,1 --beta
 [i] downloading iBoot.n56.RELEASE.im4p
 [i] image : iboot
 [i] grabbing keys from https://www.theiphonewiki.com/wiki/PeaceESeed_16E5191d_(iPhone7,1)
