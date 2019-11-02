@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+import logging
 import sys
 import os
 import json
@@ -47,6 +48,8 @@ class KeyGrabber:
         get_buildid = False
         get_version = False
 
+        logging.info("requesting IPSW's API for {}".format(device))
+
         try:
             json_file = urlopen("https://api.ipsw.me/v4/device/" + device)
         except:
@@ -56,6 +59,7 @@ class KeyGrabber:
         with open(device, 'wb') as output:
             output.write(json_file.read())
 
+        logging.info("done, now looking for version or build")
         data = json.load(open(device))
 
         if build is None:

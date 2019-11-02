@@ -80,7 +80,7 @@ def parse_arguments():
     parser.add_argument("-b","--build", dest="build_id", help="build ID to set instead of iOS version")
     parser.add_argument("-c","--codename", dest="codename", help="codename of iOS version")
     parser.add_argument("-l","--local", action='store_true', help="don't download firmware image")
-    parser.add_argument("--beta", action='store_true', help="specify beta version")
+    parser.add_argument("--beta", action='store_true', help="specify beta firmware")
 
     return parser.parse_args()
 
