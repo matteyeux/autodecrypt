@@ -80,6 +80,7 @@ def parse_arguments():
     parser.add_argument("-b","--build", dest="build_id", help="build ID to set instead of iOS version")
     parser.add_argument("-c","--codename", dest="codename", help="codename of iOS version")
     parser.add_argument("-l","--local", action='store_true', help="don't download firmware image")
+    parser.add_argument("-k","--key", dest="ivkey", help="specify iv + key")
     parser.add_argument("--beta", action='store_true', help="specify beta firmware")
     parser.add_argument("--download", action='store_true', help="download firmware image")
 
@@ -89,7 +90,7 @@ def main():
     build = None
     codename = None
     ios_version = None
-
+    ivkey = None
     parser = parse_arguments()
     logging.info('Launching "{}"'.format(sys.argv))
 
@@ -132,20 +133,21 @@ def main():
         if parser.download is True:
             return 0
 
-    url = "https://www.theiphonewiki.com/wiki/" + codename + "_" + build + "_" + "(" + parser.device + ")"
+    if ivkey is None:
+        url = "https://www.theiphonewiki.com/wiki/" + codename + "_" + build + "_" + "(" + parser.device + ")"
 
-    magic, image_type = decrypt_img.get_image_type(parser.img_file)
-    image_name = get_image_type_name(image_type)
+        magic, image_type = decrypt_img.get_image_type(parser.img_file)
+        image_name = get_image_type_name(image_type)
 
-    if image_name is None:
-        print("[e] image type not found")
+        if image_name is None:
+            print("[e] image type not found")
 
-    print("[i] image : %s" % image_name)
-    print("[i] grabbing keys from %s" % url)
-    image_keys = scrapkeys.parse_iphonewiki(url, image_name)
+        print("[i] image : %s" % image_name)
+        print("[i] grabbing keys from %s" % url)
+        ivkey = scrapkeys.parse_iphonewiki(url, image_name)
 
-    iv = image_keys[:32]
-    key = image_keys[-64:]
+    iv = ivkey[:32]
+    key = ivkey[-64:]
     print("[x] iv  : %s" % iv)
     print("[x] key : %s" % key)
 
