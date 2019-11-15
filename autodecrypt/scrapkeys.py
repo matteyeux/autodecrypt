@@ -3,10 +3,21 @@ import logging
 import sys
 import os
 import json
+import requests
+import re
 from urllib.request import urlopen
 import mechanicalsoup
 
 class KeyGrabber:
+    def getFirmwareKeysPage(self, device, buildnum):
+        wiki = "https://www.theiphonewiki.com"
+        r = requests.get(wiki + "/w/index.php", params={'search': buildnum+" "+device})
+        html = r.text
+        link = re.search("\/wiki\/.*_"+buildnum+"_\("+device+"\)",html)
+        pagelink = wiki+link.group()
+        return pagelink
+
+
     def parse_iphonewiki(self, url2parse, img_type):
         """parse the iphone wiki to get the correct key"""
         br = mechanicalsoup.StatefulBrowser()
@@ -39,6 +50,7 @@ class KeyGrabber:
                     key += hit.text
                     if j == 2:
                         return key
+
 
     def version_or_build(self, device, version, build):
         """
@@ -90,31 +102,3 @@ class KeyGrabber:
 
         os.remove(device)
         return result
-
-    # we need to get the codename of the firmware to access the URL
-    def get_codename(self, device, version, build):
-        """
-        get the codename of the firmware to access the wiki URL
-        """
-        version = version.split('.')[0] + ".x"
-        url = "https://www.theiphonewiki.com/wiki/Firmware_Keys/" + version
-
-        br = mechanicalsoup.StatefulBrowser()
-        html = br.open(url) #.read()
-
-        i = 0
-        checker = False
-        data = br.get_current_page().find_all('a')
-        device = "(%s)" % device
-
-        for hit in data:
-            # some beta may have the same codename, first in first out
-            if checker is False:
-                try:
-                    if data[i].get('href').split('_')[1] == build and data[i].get('href').split('_')[2] == device:
-                        checker = True
-                        codename = data[i].get('href').split('/')[2].split('_')[0]
-                        return codename
-                except:
-                    pass
-            i += 1

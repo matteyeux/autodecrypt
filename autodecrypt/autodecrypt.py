@@ -78,7 +78,6 @@ def parse_arguments():
     parser.add_argument("-d","--device", required=True, dest="device", help="device ID  (eg : iPhone8,1)")
     parser.add_argument("-i","--ios", dest="ios_version", help="iOS version for the said file")
     parser.add_argument("-b","--build", dest="build_id", help="build ID to set instead of iOS version")
-    parser.add_argument("-c","--codename", dest="codename", help="codename of iOS version")
     parser.add_argument("-l","--local", action='store_true', help="don't download firmware image")
     parser.add_argument("-k","--key", dest="ivkey", help="specify iv + key")
     parser.add_argument("--beta", action='store_true', help="specify beta firmware")
@@ -110,14 +109,6 @@ def main():
         else:
             ios_version = scrapkeys.version_or_build(parser.device, ios_version, build)
 
-    if parser.codename is None:
-        logging.info("grabbing firmware codename for {}".format(build))
-        codename = scrapkeys.get_codename(parser.device, ios_version, build)
-
-        if codename is None:
-            print("[e] failed to retrieve codename for {}".format(ios_version))
-            sys.exit(1)
-
     logging.info("codename : {}".format(codename))
 
     if parser.local is not True:
@@ -134,7 +125,8 @@ def main():
             return 0
 
     if ivkey is None:
-        url = "https://www.theiphonewiki.com/wiki/" + codename + "_" + build + "_" + "(" + parser.device + ")"
+        url = scrapkeys.getFirmwareKeysPage(parser.device, build)
+        logging.info("url : {}".format(url))
 
         magic, image_type = decrypt_img.get_image_type(parser.img_file)
         image_name = get_image_type_name(image_type)
