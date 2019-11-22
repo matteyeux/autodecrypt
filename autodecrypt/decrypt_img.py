@@ -5,6 +5,8 @@ import os
 import sys
 from struct import Struct
 import subprocess
+import socket
+import time
 
 tag_unpack = Struct('<4s2I').unpack
 kbag_unpack = Struct('<2I16s').unpack
@@ -102,3 +104,23 @@ def decrypt_img(input, output, magic, key, iv, openssl='openssl'):
             sys.exit(1)
     else:
         return
+
+
+def get_kbag(firmware_image):
+        out = subprocess.check_output(['img4', '-i', firmware_image, '-b'])
+        kbag = out.split()[1].decode('UTF-8')
+        return kbag
+
+
+def get_gidaes_keys(ip_addr, kbag):
+    import socket, time
+
+    client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    client.connect((ip_addr, 12345))
+
+    client.send(kbag.encode())
+    time.sleep(0.2)
+
+    keys = client.recv(96).decode()
+
+    return keys

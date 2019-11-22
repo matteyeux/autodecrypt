@@ -80,6 +80,7 @@ def parse_arguments():
     parser.add_argument("-b","--build", dest="build_id", help="build ID to set instead of iOS version")
     parser.add_argument("-l","--local", action='store_true', help="don't download firmware image")
     parser.add_argument("-k","--key", dest="ivkey", help="specify iv + key")
+    parser.add_argument("--ip", dest='ip_addr', help="specify ip address of gidaes server")
     parser.add_argument("--beta", action='store_true', help="specify beta firmware")
     parser.add_argument("--download", action='store_true', help="download firmware image")
 
@@ -124,7 +125,13 @@ def main():
         if parser.download is True:
             return 0
 
-    if ivkey is None:
+    if  parser.ip_addr is not None:
+        logging.info("grabing keys from gidaes server on {}".format(parser.ip_addr))
+        kbag = decrypt_img.get_kbag(parser.img_file)
+        ivkey = decrypt_img.get_gidaes_keys(parser.ip_addr, kbag)
+        magic = "img4"
+
+    if ivkey is None and parser.ip_addr is None:
         url = scrapkeys.getFirmwareKeysPage(parser.device, build)
         logging.info("url : {}".format(url))
 
