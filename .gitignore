@@ -5,3 +5,5 @@ __pycache__/
 env
 .vscode
 *.log
+a.out
+recv.c
