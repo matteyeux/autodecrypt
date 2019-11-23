@@ -126,7 +126,7 @@ def main():
             return 0
 
     if  parser.ip_addr is not None:
-        logging.info("grabing keys from gidaes server on {}".format(parser.ip_addr))
+        print("[i] grabing keys from gidaes server on {}:12345".format(parser.ip_addr))
         kbag = decrypt_img.get_kbag(parser.img_file)
         ivkey = decrypt_img.get_gidaes_keys(parser.ip_addr, kbag)
         magic = "img4"
