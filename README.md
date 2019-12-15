@@ -50,7 +50,7 @@ To install python3 modules, run : `pip3 install -r requirements.txt`
 » autodecrypt -f iBSS -i 10.3.3 -d iPhone6,2                                                                                                             
 [i] downloading iBSS.iphone6.RELEASE.im4p
 [i] image : ibss
-[i] grabing keys for iPhone6,2/14G60
+[i] grabbing keys for iPhone6,2/14G60
 [x] iv  : f2aa35f6e27c409fd57e9b711f416cfe
 [x] key : 599d9b18bc51d93f2385fa4e83539a2eec955fce5f4ae960b252583fcbebfe75
 [i] decrypting iBSS.iphone6.RELEASE.im4p to iBSS.iphone6.RELEASE.im4p.dec...
@@ -73,8 +73,8 @@ To install python3 modules, run : `pip3 install -r requirements.txt`
 » autodecrypt -f LLB -i 13.2.3 -d iPod9,1                           
 [i] downloading LLB.n112.RELEASE.im4p
 [i] image : llb
-[i] grabing keys for iPod9,1/17B111
-[i] grabing keys from https://foreman-public.sudosecuritygroup.com
+[i] grabbing keys for iPod9,1/17B111
+[i] grabbing keys from https://foreman-public.sudosecuritygroup.com
 [x] iv  : 85784a219eb29bcb1cc862de00a590e7
 [x] key : f539c51a7f3403d90c9bdc62490f6b5dab4318f4633269ce3fbbe855b33a4bc7
 [i] decrypting LLB.n112.RELEASE.im4p to LLB.n112.RELEASE.im4p.dec...

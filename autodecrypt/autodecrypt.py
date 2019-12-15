@@ -74,14 +74,14 @@ def main():
     magic, image_type = decrypt_img.get_image_type(parser.img_file)
 
     if parser.ip_addr is not None:
-        print("[i] grabing keys from gidaes server on %s:12345", parser.ip_addr)
+        print("[i] grabbing keys from gidaes server on %s:12345", parser.ip_addr)
         kbag = decrypt_img.get_kbag(parser.img_file)
         print("kbag : {}".format(kbag))
         ivkey = decrypt_img.get_gidaes_keys(parser.ip_addr, kbag)
         magic = "img4"
 
     if ivkey is None and parser.ip_addr is None:
-        logging.info("grabing keys")
+        logging.info("grabbing keys")
 
         image_name = ipsw_utils.get_image_type_name(image_type)
 
@@ -89,9 +89,9 @@ def main():
             print("[e] image type not found")
 
         print("[i] image : %s" % image_name)
-        print("[i] grabing keys for {}/{}".format(parser.device, build))
+        print("[i] grabbing keys for {}/{}".format(parser.device, build))
         if foreman_host is not None and foreman_host != "":
-            print("[i] grabing keys from %s" % foreman_host)
+            print("[i] grabbing keys from %s" % foreman_host)
             foreman_json = scrapkeys.foreman_get_json(foreman_host, parser.device, build)
             ivkey = scrapkeys.foreman_get_keys(foreman_json, parser.img_file)
         else:
