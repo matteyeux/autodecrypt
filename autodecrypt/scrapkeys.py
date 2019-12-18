@@ -24,14 +24,26 @@ def getkeys(device: str, buildnum: str, img_file: str = None) -> str:
     if pagelink is None:
         return None
 
+    oldname = None
     html = requests.get(pagelink).text
     query = PyQuery(html)
 
     for span in query.items('span.mw-headline'):
         name = span.text().lower()
+        # on some pages (https://www.theiphonewiki.com/wiki/Genoa_13G36_(iPhone8,1))
+        # the name of file comes with a non-breaking space in Latin1 (ISO 8859-1),
+        # I can either replace or split.
+        name = name.split('\xa0')[0]
 
         if name == "sep-firmware":
             name = "sepfirmware"
+
+        # Name is the same for both files except
+        # that the id has a "2" for the second file:
+        # n71m : keypage-ibec-key
+        # n71  : keypage-ibec2-key
+        if oldname == name:
+            name += "2"
 
         fname = span.parent().next("* > span.keypage-filename").text()
         ivkey = span.parent().siblings("*>*>code#keypage-" + name + "-iv").text()
@@ -39,6 +51,7 @@ def getkeys(device: str, buildnum: str, img_file: str = None) -> str:
 
         if fname == img_file and img_file is not None:
             return ivkey
+        oldname = name
     return None
 
 
