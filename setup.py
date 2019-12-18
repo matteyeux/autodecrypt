@@ -10,7 +10,7 @@ with open('requirements.txt') as f:
 
 setup(
     name="autodecrypt",
-    version="2.0.0",
+    version="2.0.1",
     description="A tool to grab keys and decrypt iOS firmware images",
     license="MIT",
     packages=['autodecrypt'],
