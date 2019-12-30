@@ -60,11 +60,11 @@ def get_image_type_name(image: str) -> str:
     return None
 
 
-def get_json_data(model: str) -> dict:
+def get_json_data(model: str, fw_type: str = "ota") -> dict:
     """Setup json data to parse."""
     url = "https://api.ipsw.me/v4/device/" + model
-    url += "?type=ota"
-
+    if fw_type == "ota":
+        url += "?type=ota"
     resp = requests.get(url=url)
     return resp.json()
 
@@ -82,11 +82,14 @@ def get_board_config(json_data: dict) -> str:
     return json_data["boardconfig"]
 
 
-def get_build_id(json_data: dict, ios_version) -> str:
+def get_build_id(json_data: dict, ios_version: str, fw_type: str = "ota") -> str:
     """Return build ID of iOS version."""
+    release = ""
     for i in range(0, len(json_data['firmwares'])):
         curent_vers = json_data['firmwares'][i]['version']
-        release = json_data['firmwares'][i]['releasetype']
+        if fw_type == "ota":
+            release = json_data['firmwares'][i]['releasetype']
+
         if ios_version in curent_vers and release == "":
             return json_data['firmwares'][i]['buildid']
     return None

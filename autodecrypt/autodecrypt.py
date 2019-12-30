@@ -16,7 +16,7 @@ except ImportError:
 
 __author__ = "matteyeux"
 
-logging.basicConfig(filename="autodecrypt.log",
+logging.basicConfig(filename="/tmp/autodecrypt.log",
                     format='%(asctime)s %(message)s',
                     datefmt='%m/%d/%Y %H:%M:%S', level=logging.INFO)
 
@@ -39,11 +39,38 @@ def parse_arguments():
     return parser.parse_args()
 
 
+def get_firmware_keys(device: str, build: str, img_file: str, image_type: str):
+    """
+    Get firmware keys using the key scrapper
+    or by requesting of foreman instance.
+    If one is set in env.
+    """
+    logging.info("grabbing keys")
+    foreman_host = os.getenv('FOREMAN_HOST')
+    image_name = ipsw_utils.get_image_type_name(image_type)
+
+    if image_name is None:
+        print("[e] image type not found")
+
+    print("[i] image : %s" % image_name)
+    print("[i] grabbing keys for {}/{}".format(device, build))
+    if foreman_host is not None and foreman_host != "":
+        print("[i] grabbing keys from %s" % foreman_host)
+        foreman_json = scrapkeys.foreman_get_json(foreman_host, device, build)
+        ivkey = scrapkeys.foreman_get_keys(foreman_json, img_file)
+    else:
+        ivkey = scrapkeys.getkeys(device, build, img_file)
+
+    if ivkey is None:
+        print("[e] unable to get keys for {}/{}".format(device, build))
+        return None
+    return ivkey
+
+
 def main():
     """Main function."""
     build = None
     ios_version = None
-    foreman_host = os.getenv('FOREMAN_HOST')
 
     parser = parse_arguments()
     ivkey = parser.ivkey
@@ -61,11 +88,16 @@ def main():
 
     if parser.local is not True:
         logging.info("grabbing OTA file URL for %s/%s", parser.device, ios_version)
-        ota_url = ipsw_utils.get_firmware_url(json_data, build)
-        if ota_url is None:
-            print("[e] could not get OTA url")
-            sys.exit(1)
-        parser.img_file = ipsw_utils.grab_file(ota_url, parser.img_file)
+        fw_url = ipsw_utils.get_firmware_url(json_data, build)
+        if fw_url is None:
+            print("[w] could not get OTA url, trying with IPSW url")
+            json_data = ipsw_utils.get_json_data(parser.device, "ipsw")
+            build = ipsw_utils.get_build_id(json_data, ios_version, "ipsw")
+            fw_url = ipsw_utils.get_firmware_url(json_data, build)
+            if fw_url is None:
+                print("[e] could not get IPSW url, exiting...")
+                sys.exit(1)
+        parser.img_file = ipsw_utils.grab_file(fw_url, parser.img_file)
         if parser.download is True:
             # Just download image file
             # won't decrypt
@@ -81,25 +113,7 @@ def main():
         magic = "img4"
 
     if ivkey is None and parser.ip_addr is None:
-        logging.info("grabbing keys")
-
-        image_name = ipsw_utils.get_image_type_name(image_type)
-
-        if image_name is None:
-            print("[e] image type not found")
-
-        print("[i] image : %s" % image_name)
-        print("[i] grabbing keys for {}/{}".format(parser.device, build))
-        if foreman_host is not None and foreman_host != "":
-            print("[i] grabbing keys from %s" % foreman_host)
-            foreman_json = scrapkeys.foreman_get_json(foreman_host, parser.device, build)
-            ivkey = scrapkeys.foreman_get_keys(foreman_json, parser.img_file)
-        else:
-            ivkey = scrapkeys.getkeys(parser.device, build, parser.img_file)
-
-        if ivkey is None:
-            print("[e] unable to get keys for {}/{}".format(parser.device, build))
-            sys.exit(1)
+        ivkey = get_firmware_keys(parser.device, build, parser.img_file, image_type)
 
     init_vector = ivkey[:32]
     key = ivkey[-64:]
