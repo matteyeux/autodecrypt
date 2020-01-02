@@ -2,7 +2,7 @@ import sys
 from setuptools import setup
 
 if sys.version_info < (3, 6, 0):
-    sys.stderr.write("ERROR: You need Python 3.6 or later to use awhtools.\n")
+    sys.stderr.write("ERROR: You need Python 3.6 or later to use autodecrypt.\n")
     exit(1)
 
 with open('requirements.txt') as f:
