@@ -11,7 +11,7 @@ def grab_file(url: str, filename: str) -> str:
         filenames = zipfile.namelist()
         for fname in filenames:
             zinfo = zipfile.getinfo(fname)
-            if filename in zinfo.filename and not ".plist" in zinfo.filename:
+            if filename in zinfo.filename and ".plist" not in zinfo.filename:
                 filename = zinfo.filename.split("/")[-1]
                 print("[i] downloading %s" % filename)
                 extract_and_clean(zipfile, zinfo.filename, filename)

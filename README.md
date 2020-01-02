@@ -1,5 +1,5 @@
 # autodecrypt
-Simple tool to decrypt iOS firmware images
+Simple tool to decrypt iOS firmware images.
 
 Going to the iPhone wiki and copying and pasting firmware keys to your terminal is boring.
 
