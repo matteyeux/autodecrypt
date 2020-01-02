@@ -19,7 +19,7 @@ setup(
     author = 'matteyeux',
     author_email = 'mathieu.hautebas@gmail.com',
     url = 'https://github.com/matteyeux/autodecrypt',
-    download_url = 'https://github.com/matteyeux/autodecrypt/archive/2.0.1.tar.gz',
+    download_url = 'https://github.com/matteyeux/autodecrypt/archive/2.0.2.tar.gz',
     keywords = ['autodecrypt', 'iOS', 'iBoot'],
     install_requires = ['certifi', 'chardet', 'cssselect',
                         'idna', 'lxml', 'pyquery', 'remotezip',
