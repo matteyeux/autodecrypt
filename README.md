@@ -1,4 +1,6 @@
 # autodecrypt
+[![PyPI version](https://badge.fury.io/py/autodecrypt.svg)](https://badge.fury.io/py/autodecrypt)
+
 Simple tool to decrypt iOS firmware images.
 
 Going to the iPhone wiki and copying and pasting firmware keys to your terminal is boring.
@@ -27,20 +29,16 @@ optional arguments:
   --download            download firmware image
 ```
 
-By default it automatically downloads image file from apple.com using ipsw.me API.
-
-## Demo
-[![asciicast](https://asciinema.org/a/sbvUxvWWE7TwCuMfYWxXc4jrC.svg)](https://asciinema.org/a/sbvUxvWWE7TwCuMfYWxXc4jrC)
-
 ## Dependencies
-- Python3.6
+- Python3
 - python3-pip
 - [img4](https://github.com/xerub/img4lib)
 
 To install python3 modules, run : `pip3 install -r requirements.txt`
 
 ## Installation
-`python3 setup.py install --user`
+From the repo : `python3 setup.py install`
+Via PyPi : `pip3 install autodecrypt`
 
 
 ## Examples
