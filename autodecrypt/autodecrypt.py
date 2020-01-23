@@ -35,6 +35,7 @@ def parse_arguments():
     parser.add_argument("-k", "--key", dest="ivkey", help="specify iv + key")
     parser.add_argument("--ip", dest='ip_addr', help="specify ip address of gidaes server")
     parser.add_argument("--download", action='store_true', help="download firmware image")
+    parser.add_argument("-v", "--version", action=print_version(), help="print autodecrypt version")
 
     return parser.parse_args()
 
@@ -65,6 +66,12 @@ def get_firmware_keys(device: str, build: str, img_file: str, image_type: str):
         print("[e] unable to get keys for {}/{}".format(device, build))
         return None
     return ivkey
+
+
+def print_version():
+    print("autodecrypt - version 2.0.3")
+    print("Copyright 2020 - matteyeux")
+    sys.exit(0)
 
 
 def main():
