@@ -40,7 +40,7 @@ def decrypt_img(infile: str, outfile: str, magic: str, key: str, init_vector: st
 
         try:
             subprocess.Popen(['img4', '-i', infile, outfile, ivkey], stdout=fnull)
-        except subprocess.CalledProcessError:
+        except FileNotFoundError:
             print("[e] can't decrypt file, is img4 tool in $PATH ?")
             sys.exit(1)
     else:

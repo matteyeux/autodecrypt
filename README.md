@@ -30,15 +30,16 @@ optional arguments:
 ```
 
 ## Dependencies
-- Python3
-- python3-pip
 - [img4](https://github.com/xerub/img4lib)
 
-To install python3 modules, run : `pip3 install -r requirements.txt`
+To run autodecrypt, use poetry with a virtualenv:
+- `virtualenv -p python3 env`
+- `pip3 install poetry`
+- `poetry install`
+
 
 ## Installation
-From the repo : `python3 setup.py install`
-Via PyPi : `pip3 install autodecrypt`
+`pip3 install autodecrypt`
 
 
 ## Examples
