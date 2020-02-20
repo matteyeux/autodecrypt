@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "autodecrypt"
-version = "2.0.5"
+version = "2.0.6"
 description = "Tool to decrypt iOS firmware images"
 authors = ["matteyeux"]
 license = "MIT"
@@ -27,7 +27,7 @@ pyquery = "^1.4.1"
 [tool.poetry.dev-dependencies]
 
 [tool.poetry.scripts]
-autodecrypt = "autodecrypt.autodecrypt:main"
+autodecrypt = "autodecrypt.main:main"
 
 [build-system]
 requires = ["poetry>=0.12"]

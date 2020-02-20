@@ -5,14 +5,10 @@ import argparse
 import logging
 import os
 import sys
-try:
-    from autodecrypt import decrypt_img
-    from autodecrypt import scrapkeys
-    from autodecrypt import ipsw_utils
-except ImportError:
-    import decrypt_img
-    import ipsw_utils
-    import scrapkeys
+
+from autodecrypt import decrypt_img
+from autodecrypt import scrapkeys
+from autodecrypt import ipsw_utils
 
 __author__ = "matteyeux"
 
