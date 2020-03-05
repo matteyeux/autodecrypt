@@ -51,7 +51,7 @@ def decrypt_img(infile: str, outfile: str, magic: str, key: str, init_vector: st
 def get_kbag(firmware_image: str) -> str:
     """Return kbag of img4 file."""
     out = subprocess.check_output(['img4', '-i', firmware_image, '-b'])
-    kbag = out.split()[1].decode('UTF-8')
+    kbag = out.split()[0].decode('UTF-8')
     return kbag
 
 

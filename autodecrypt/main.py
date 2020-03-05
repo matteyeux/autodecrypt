@@ -102,9 +102,9 @@ def main():
     magic, image_type = decrypt_img.get_image_type(parser.img_file)
 
     if parser.ip_addr is not None:
-        print("[i] grabbing keys from gidaes server on %s:12345", parser.ip_addr)
+        print("[i] grabbing keys from gidaes server on %s:12345" % parser.ip_addr)
         kbag = decrypt_img.get_kbag(parser.img_file)
-        print("kbag : {}".format(kbag))
+        print("[i] kbag : {}".format(kbag))
         ivkey = decrypt_img.get_gidaes_keys(parser.ip_addr, kbag)
         magic = "img4"
 

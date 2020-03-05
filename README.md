@@ -80,6 +80,22 @@ To run autodecrypt, use poetry with a virtualenv:
 [x] done
 ```
 
+#### Decrypt keys from Device
+Since [checkra1n] 0.9.8.1 you can use autodecrypt and [this tool] to decrypt kbags from userland.
+
+You'll have to run `kbag` as a server on your idevice and specify IP address with autodecrypt :
+```
+» autodecrypt -f iBoot -i 13.3.1 -d iPhone9,3 --ip 192.168.1.4
+[i] downloading iBoot.d10.RELEASE.im4p
+[i] grabbing keys from gidaes server on 192.168.1.4:12345
+[i] kbag : EF95BCD9B0C229D7EBD11EE9CA8FC824C02350BAD10234B4D8838B205266C3E6E37C281F14D0C663534CC79BF39AB269
+[x] iv  : 8630e88c3155844eb61289e42f8bde1b
+[x] key : da05c8905394ac13ce41beef1d13847bddc0af1252710cb3578a269473f9c3a6
+[i] decrypting iBoot.d10.RELEASE.im4p to iBoot.d10.RELEASE.im4p.dec...
+[x] done
+```
+
+
 #### Log
 
 For debugging purposes you can check `autodecrypt.log` :
