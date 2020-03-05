@@ -81,7 +81,7 @@ To run autodecrypt, use poetry with a virtualenv:
 ```
 
 #### Decrypt keys from Device
-Since [checkra1n] 0.9.8.1 you can use autodecrypt and [this tool] to decrypt kbags from userland.
+Since [checkra1n](https://checkra.in/) 0.9.8.1 you can use autodecrypt and [this tool] to decrypt kbags from userland.
 
 You'll have to run `kbag` as a server on your idevice and specify IP address with autodecrypt :
 ```
@@ -111,6 +111,7 @@ For debugging purposes you can check `autodecrypt.log` :
 ```
 
 ### Credits
+- checkra1n team for AES patches and kbag.m
 - kennytm for img3 stuff (removed for the moment)
 - xerub for [img4](https://github.com/xerub/img4lib)
 - tihmstar for wiki parsing ([my method](https://github.com/matteyeux/ios-tools/blob/master/scrapkeys.py) was pretty bad)
