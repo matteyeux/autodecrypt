@@ -44,7 +44,7 @@ To run autodecrypt, use poetry with a virtualenv:
 
 ## Examples
 
-#### Download a decrypt iBSS using keys from theiphonewiki 
+#### Download and decrypt iBSS using keys from theiphonewiki 
 ```
 » autodecrypt -f iBSS -i 10.3.3 -d iPhone6,2                                                                                                             
 [i] downloading iBSS.iphone6.RELEASE.im4p
