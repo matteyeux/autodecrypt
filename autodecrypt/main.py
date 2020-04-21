@@ -82,6 +82,7 @@ def main():
         # iOS version (eg : 10.2.1)
         build = ipsw_utils.get_build_id(json_data, ios_version)
 
+
     if parser.local is not True:
         logging.info("grabbing OTA file URL for %s/%s", parser.device, ios_version)
         fw_url = ipsw_utils.get_firmware_url(json_data, build)

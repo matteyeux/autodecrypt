@@ -1,4 +1,5 @@
 """Module to deal with ipsw files."""
+import sys
 import os
 import shutil
 import requests
@@ -85,6 +86,11 @@ def get_board_config(json_data: dict) -> str:
 def get_build_id(json_data: dict, ios_version: str, fw_type: str = "ota") -> str:
     """Return build ID of iOS version."""
     release = ""
+
+    if ios_version is None:
+        print("[e] no iOS version specified")
+        return sys.exit(1)
+
     for i in range(0, len(json_data['firmwares'])):
         curent_vers = json_data['firmwares'][i]['version']
         if fw_type == "ota":
