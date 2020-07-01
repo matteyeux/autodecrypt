@@ -15,3 +15,5 @@ dist
 
 # file downloaded by drone exec
 img4lib
+kernel*
+ibo*

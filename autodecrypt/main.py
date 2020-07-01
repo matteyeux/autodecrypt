@@ -12,25 +12,49 @@ from autodecrypt import ipsw_utils
 
 __author__ = "matteyeux"
 
-logging.basicConfig(filename="/tmp/autodecrypt.log",
-                    format='%(asctime)s %(message)s',
-                    datefmt='%m/%d/%Y %H:%M:%S', level=logging.INFO)
+logging.basicConfig(
+    filename="/tmp/autodecrypt.log",
+    format="%(asctime)s %(message)s",
+    datefmt="%m/%d/%Y %H:%M:%S",
+    level=logging.INFO,
+)
 
 
 def parse_arguments():
     """Parse arguments from cmdline."""
     parser = argparse.ArgumentParser()
-    parser.add_argument("-f", "--file", required=True, dest="img_file",
-                        help="img file you want to decrypt")
-    parser.add_argument("-d", "--device", required=True, dest="device",
-                        help="device ID  (eg : iPhone8,1)")
-    parser.add_argument("-i", "--ios", dest="ios_version", help="iOS version for the said file")
-    parser.add_argument("-b", "--build", dest="build_id",
-                        help="build ID to set instead of iOS version")
-    parser.add_argument("-l", "--local", action='store_true', help="don't download firmware image")
+    parser.add_argument(
+        "-f",
+        "--file",
+        required=True,
+        dest="img_file",
+        help="img file you want to decrypt",
+    )
+    parser.add_argument(
+        "-d",
+        "--device",
+        required=True,
+        dest="device",
+        help="device ID  (eg : iPhone8,1)",
+    )
+    parser.add_argument(
+        "-i", "--ios", dest="ios_version", help="iOS version for the said file"
+    )
+    parser.add_argument(
+        "-b", "--build", dest="build_id",
+        help="build ID to set instead of iOS version"
+    )
+    parser.add_argument(
+        "-l", "--local", action="store_true",
+        help="don't download firmware image"
+    )
     parser.add_argument("-k", "--key", dest="ivkey", help="specify iv + key")
-    parser.add_argument("--ip", dest='ip_addr', help="specify ip address of gidaes server")
-    parser.add_argument("--download", action='store_true', help="download firmware image")
+    parser.add_argument(
+        "--ip", dest="ip_addr", help="specify ip address of gidaes server"
+    )
+    parser.add_argument(
+        "--download", action="store_true", help="download firmware image"
+    )
 
     return parser.parse_args()
 
@@ -42,7 +66,7 @@ def get_firmware_keys(device: str, build: str, img_file: str, image_type: str):
     If one is set in env.
     """
     logging.info("grabbing keys")
-    foreman_host = os.getenv('FOREMAN_HOST')
+    foreman_host = os.getenv("FOREMAN_HOST")
     image_name = ipsw_utils.get_image_type_name(image_type)
 
     if image_name is None:
@@ -71,7 +95,7 @@ def main():
     parser = parse_arguments()
     ivkey = parser.ivkey
 
-    logging.info('Launching %s', sys.argv)
+    logging.info("Launching %s", sys.argv)
     json_data = ipsw_utils.get_json_data(parser.device)
 
     ios_version = parser.ios_version
@@ -82,9 +106,9 @@ def main():
         # iOS version (eg : 10.2.1)
         build = ipsw_utils.get_build_id(json_data, ios_version)
 
-
     if parser.local is not True:
-        logging.info("grabbing OTA file URL for %s/%s", parser.device, ios_version)
+        logging.info("grabbing OTA file URL for %s/%s",
+                     parser.device, ios_version)
         fw_url = ipsw_utils.get_firmware_url(json_data, build)
         if fw_url is None:
             print("[w] could not get OTA url, trying with IPSW url")
@@ -103,24 +127,26 @@ def main():
     magic, image_type = decrypt_img.get_image_type(parser.img_file)
 
     if parser.ip_addr is not None:
-        print("[i] grabbing keys from gidaes server on %s:12345" % parser.ip_addr)
+        print("[i] grabbing keys from gidaes server on %s:12345" %
+              parser.ip_addr)
         kbag = decrypt_img.get_kbag(parser.img_file)
         print("[i] kbag : {}".format(kbag))
         ivkey = decrypt_img.get_gidaes_keys(parser.ip_addr, kbag)
         magic = "img4"
 
     if ivkey is None and parser.ip_addr is None:
-        ivkey = get_firmware_keys(parser.device, build, parser.img_file, image_type)
+        ivkey = get_firmware_keys(parser.device, build,
+                                  parser.img_file, image_type)
 
     init_vector = ivkey[:32]
     key = ivkey[-64:]
     print("[x] iv  : %s" % init_vector)
     print("[x] key : %s" % key)
 
-    decrypt_img.decrypt_img(parser.img_file, parser.img_file + ".dec", magic, key, init_vector)
+    decrypt_img.decrypt_img(parser.img_file, magic, key, init_vector)
     print("[x] done")
     return 0
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

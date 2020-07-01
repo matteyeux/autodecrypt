@@ -1,0 +1,16 @@
+[flake8]
+max-line-length = 80
+ignore =
+per-file-ignores = __init__.py:F401
+exclude =
+    .git
+    env
+	etna_cli.egg-info
+	LICENSE
+	poetry.lock
+	__pycache__
+	pyproject.toml
+	README.md
+    build
+    dist
+    tests/

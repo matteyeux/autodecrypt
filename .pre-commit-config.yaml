@@ -1,0 +1,11 @@
+repos:
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v2.5.0
+    hooks:
+    -   id: trailing-whitespace
+    -   id: end-of-file-fixer
+-   repo: https://gitlab.com/pycqa/flake8
+    rev: '3.8.3'
+    hooks:
+    -   id: flake8
+        args: ['--per-file-ignores=__init__.py:F401']

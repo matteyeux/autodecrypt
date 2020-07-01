@@ -44,9 +44,9 @@ To run autodecrypt, use poetry with a virtualenv:
 
 ## Examples
 
-#### Download and decrypt iBSS using keys from theiphonewiki 
+#### Download and decrypt iBSS using keys from theiphonewiki
 ```
-» autodecrypt -f iBSS -i 10.3.3 -d iPhone6,2                                                                                                             
+» autodecrypt -f iBSS -i 10.3.3 -d iPhone6,2
 [i] downloading iBSS.iphone6.RELEASE.im4p
 [i] image : ibss
 [i] grabbing keys for iPhone6,2/14G60
@@ -66,10 +66,10 @@ To run autodecrypt, use poetry with a virtualenv:
 [x] done
 ```
 
-#### Use [foreman](https://github.com/GuardianFirewall/foreman) instance to grab firmware keys 
+#### Use [foreman](https://github.com/GuardianFirewall/foreman) instance to grab firmware keys
 ```
 » export FOREMAN_HOST="https://foreman-public.sudosecuritygroup.com"
-» autodecrypt -f LLB -i 13.2.3 -d iPod9,1                           
+» autodecrypt -f LLB -i 13.2.3 -d iPod9,1
 [i] downloading LLB.n112.RELEASE.im4p
 [i] image : llb
 [i] grabbing keys for iPod9,1/17B111

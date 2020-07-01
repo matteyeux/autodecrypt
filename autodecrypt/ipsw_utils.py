@@ -28,7 +28,7 @@ def extract_and_clean(zipper: str, zip_path: str, filename: str):
     zipper.extract(zip_path)
     if "/" in zip_path:
         os.rename(zip_path, filename)
-        shutil.rmtree(zip_path.split('/')[0])
+        shutil.rmtree(zip_path.split("/")[0])
 
 
 IMAGE_TYPES = [
@@ -47,7 +47,7 @@ IMAGE_TYPES = [
     ["ssbi", "ibss", "ibss"],
     ["cebi", "ibec", "ibec"],
     ["lnrk", "krnl", "kernelcache"],
-    ["sepi", "sepi", "sepfirmware"]
+    ["sepi", "sepi", "sepfirmware"],
 ]
 
 
@@ -72,9 +72,9 @@ def get_json_data(model: str, fw_type: str = "ota") -> dict:
 
 def get_firmware_url(json_data: dict, buildid: str) -> str:
     """Return URL of IPSW file."""
-    for i in range(0, len(json_data['firmwares'])):
-        if json_data['firmwares'][i]['buildid'] == buildid:
-            return json_data['firmwares'][i]['url']
+    for i in range(0, len(json_data["firmwares"])):
+        if json_data["firmwares"][i]["buildid"] == buildid:
+            return json_data["firmwares"][i]["url"]
     return None
 
 
@@ -83,21 +83,21 @@ def get_board_config(json_data: dict) -> str:
     return json_data["boardconfig"]
 
 
-def get_build_id(json_data: dict, ios_version: str, fw_type: str = "ota") -> str:
+def get_build_id(json_data: dict, ios_vers: str, fw_type: str = "ota") -> str:
     """Return build ID of iOS version."""
     release = ""
 
-    if ios_version is None:
+    if ios_vers is None:
         print("[e] no iOS version specified")
         return sys.exit(1)
 
-    for i in range(0, len(json_data['firmwares'])):
-        curent_vers = json_data['firmwares'][i]['version']
+    for i in range(0, len(json_data["firmwares"])):
+        curent_vers = json_data["firmwares"][i]["version"]
         if fw_type == "ota":
-            release = json_data['firmwares'][i]['releasetype']
+            release = json_data["firmwares"][i]["releasetype"]
 
-        if ios_version in curent_vers and release == "":
-            return json_data['firmwares'][i]['buildid']
+        if ios_vers in curent_vers and release == "":
+            return json_data["firmwares"][i]["buildid"]
     return None
 
 
@@ -105,15 +105,15 @@ def get_ios_vers(json_data: dict, buildid) -> str:
     """"Return iOS version of build ID."""
     if json_data is None:
         return None
-    for i in range(0, len(json_data['firmwares'])):
-        if json_data['firmwares'][i]['buildid'] == buildid:
-            return json_data['firmwares'][i]['version']
+    for i in range(0, len(json_data["firmwares"])):
+        if json_data["firmwares"][i]["buildid"] == buildid:
+            return json_data["firmwares"][i]["version"]
     return None
 
 
 def get_build_list(json_data: dict) -> list:
     """Return a list of build IDs for a device"""
     builds = []
-    for i in range(len(json_data['firmwares'])):
-        builds.append(json_data['firmwares'][i]['buildid'])
+    for i in range(len(json_data["firmwares"])):
+        builds.append(json_data["firmwares"][i]["buildid"])
     return builds
