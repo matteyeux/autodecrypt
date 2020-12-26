@@ -1,5 +1,6 @@
 # autodecrypt
 [![PyPI version](https://badge.fury.io/py/autodecrypt.svg)](https://badge.fury.io/py/autodecrypt)
+[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/matteyeux/autodecrypt/master.svg)](https://results.pre-commit.ci/latest/github/matteyeux/autodecrypt/master)
 
 Simple tool to decrypt iOS firmware images.
 
