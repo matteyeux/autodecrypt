@@ -1,0 +1,2 @@
+# Handle PongoOS
+ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="05ac", ATTR{idProduct}=="4141", OWNER="root", GROUP="plugdev", MODE="0660"

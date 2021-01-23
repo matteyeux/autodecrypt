@@ -1,10 +1,8 @@
 """Module used for decrypting and extracting img4 file format"""
 import logging
 import os
-import sys
 import subprocess
-import socket
-import time
+import sys
 
 
 def get_image_type(filename: str):
@@ -31,7 +29,7 @@ def decrypt_img(infile: str, magic: str, key: str, init_vector: str):
         print("[e] %s is not an IMG4 file" % infile)
         sys.exit(1)
 
-    outfile = infile + ".dec"
+    outfile = infile.replace("im4p", "bin")
     if magic == "img4":
         print("[i] decrypting %s to %s..." % (infile, outfile))
         fnull = open(os.devnull, "w")
@@ -40,8 +38,9 @@ def decrypt_img(infile: str, magic: str, key: str, init_vector: str):
         logging.info("img4 -i %s %s %s", infile, outfile, ivkey)
 
         try:
-            subprocess.Popen(["img4", "-i", infile, outfile, ivkey],
-                             stdout=fnull)
+            subprocess.Popen(
+                ["img4", "-i", infile, outfile, ivkey], stdout=fnull
+            )
         except FileNotFoundError:
             print("[e] can't decrypt file, is img4 tool in $PATH ?")
             sys.exit(1)
@@ -55,16 +54,3 @@ def get_kbag(firmware_image: str) -> str:
     out = subprocess.check_output(["img4", "-i", firmware_image, "-b"])
     kbag = out.split()[0].decode("UTF-8")
     return kbag
-
-
-def get_gidaes_keys(ip_addr: str, kbag: str) -> str:
-    """Return keys from remote device."""
-    client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    client.connect((ip_addr, 12345))
-
-    client.send(kbag.encode())
-    time.sleep(0.2)
-
-    keys = client.recv(96).decode()
-
-    return keys

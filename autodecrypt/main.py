@@ -2,22 +2,13 @@
 # -*- coding: utf-8 -*-
 """Main module for autodecrypt."""
 import argparse
-import logging
-import os
-import sys
 
 from autodecrypt import decrypt_img
-from autodecrypt import scrapkeys
-from autodecrypt import ipsw_utils
+from autodecrypt import fw_utils
+from autodecrypt import utils
+
 
 __author__ = "matteyeux"
-
-logging.basicConfig(
-    filename="/tmp/autodecrypt.log",
-    format="%(asctime)s %(message)s",
-    datefmt="%m/%d/%Y %H:%M:%S",
-    level=logging.INFO,
-)
 
 
 def parse_arguments():
@@ -41,109 +32,78 @@ def parse_arguments():
         "-i", "--ios", dest="ios_version", help="iOS version for the said file"
     )
     parser.add_argument(
-        "-b", "--build", dest="build_id",
-        help="build ID to set instead of iOS version"
+        "-b",
+        "--build",
+        dest="build",
+        help="build ID to set instead of iOS version",
     )
     parser.add_argument(
-        "-l", "--local", action="store_true",
-        help="don't download firmware image"
+        "-p",
+        "--pongo",
+        action="store_true",
+        help="use PongoOS over USB for decryption",
+    )
+    parser.add_argument(
+        "-l",
+        "--local",
+        action="store_true",
+        help="don't download firmware image",
     )
     parser.add_argument("-k", "--key", dest="ivkey", help="specify iv + key")
     parser.add_argument(
-        "--ip", dest="ip_addr", help="specify ip address of gidaes server"
-    )
-    parser.add_argument(
         "--download", action="store_true", help="download firmware image"
+    )
+
+    parser.add_argument(
+        "--beta", action="store_true", help="specify beta firmware"
     )
 
     return parser.parse_args()
 
 
-def get_firmware_keys(device: str, build: str, img_file: str, image_type: str):
-    """
-    Get firmware keys using the key scrapper
-    or by requesting of foreman instance.
-    If one is set in env.
-    """
-    logging.info("grabbing keys")
-    foreman_host = os.getenv("FOREMAN_HOST")
-    image_name = ipsw_utils.get_image_type_name(image_type)
-
-    if image_name is None:
-        print("[e] image type not found")
-
-    print("[i] image : %s" % image_name)
-    print("[i] grabbing keys for {}/{}".format(device, build))
-    if foreman_host is not None and foreman_host != "":
-        print("[i] grabbing keys from %s" % foreman_host)
-        foreman_json = scrapkeys.foreman_get_json(foreman_host, device, build)
-        ivkey = scrapkeys.foreman_get_keys(foreman_json, img_file)
-    else:
-        ivkey = scrapkeys.getkeys(device, build, img_file)
-
-    if ivkey is None:
-        print("[e] unable to get keys for {}/{}".format(device, build))
-        return None
-    return ivkey
-
-
 def main():
     """Main function."""
-    build = None
-    ios_version = None
-
     parser = parse_arguments()
     ivkey = parser.ivkey
+    build = parser.build
 
-    logging.info("Launching %s", sys.argv)
-    json_data = ipsw_utils.get_json_data(parser.device)
-
-    ios_version = parser.ios_version
-    build = parser.build_id
+    json_data = fw_utils.get_json_data(parser.device)
 
     if build is None:
-        # I assume you have at least specified
-        # iOS version (eg : 10.2.1)
-        build = ipsw_utils.get_build_id(json_data, ios_version)
+        build = fw_utils.get_build_id(json_data, parser.ios_version)
 
-    if parser.local is not True:
-        logging.info("grabbing OTA file URL for %s/%s",
-                     parser.device, ios_version)
-        fw_url = ipsw_utils.get_firmware_url(json_data, build)
-        if fw_url is None:
-            print("[w] could not get OTA url, trying with IPSW url")
-            json_data = ipsw_utils.get_json_data(parser.device, "ipsw")
-            build = ipsw_utils.get_build_id(json_data, ios_version, "ipsw")
-            fw_url = ipsw_utils.get_firmware_url(json_data, build)
-            if fw_url is None:
-                print("[e] could not get IPSW url, exiting...")
-                sys.exit(1)
-        parser.img_file = ipsw_utils.grab_file(fw_url, parser.img_file)
-        if parser.download is True:
-            # Just download image file
-            # won't decrypt
-            return 0
+    if parser.local is False:
+        if parser.beta is True:
+            img_file = utils.download_beta_file(parser, json_data)
+        else:
+            img_file = utils.download_file(parser, json_data)
 
-    magic, image_type = decrypt_img.get_image_type(parser.img_file)
+    if img_file is None:
+        print("[e] could not grab file")
+        return 1
 
-    if parser.ip_addr is not None:
-        print("[i] grabbing keys from gidaes server on %s:12345" %
-              parser.ip_addr)
-        kbag = decrypt_img.get_kbag(parser.img_file)
-        print("[i] kbag : {}".format(kbag))
-        ivkey = decrypt_img.get_gidaes_keys(parser.ip_addr, kbag)
-        magic = "img4"
+    # if you only need to download file,
+    # you can stop here
+    if parser.download is True:
+        return 0
 
-    if ivkey is None and parser.ip_addr is None:
-        ivkey = get_firmware_keys(parser.device, build,
-                                  parser.img_file, image_type)
+    magic, image_type = decrypt_img.get_image_type(img_file)
 
-    init_vector = ivkey[:32]
-    key = ivkey[-64:]
-    print("[x] iv  : %s" % init_vector)
+    if parser.pongo is True:
+        ivkey = utils.grab_key_from_pongo(img_file)
+
+    if ivkey is None and parser.pongo is False:
+        ivkey = utils.get_firmware_keys(
+            parser.device, build, img_file, image_type
+        )
+    if ivkey is None:
+        return
+
+    iv, key = utils.split_key(ivkey)
+    print("[x] iv  : %s" % iv)
     print("[x] key : %s" % key)
 
-    decrypt_img.decrypt_img(parser.img_file, magic, key, init_vector)
+    decrypt_img.decrypt_img(img_file, magic, key, iv)
     print("[x] done")
     return 0
 

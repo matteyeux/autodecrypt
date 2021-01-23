@@ -1,17 +1,18 @@
 #!/usr/bin/env python
 """Module to scrapkeys and deal with foreman."""
 import re
+
 import requests
 from pyquery import PyQuery
 
 
-def getfirmwarekeyspage(device: str, buildnum: str) -> str:
+def get_fw_keys_page(device: str, build: str) -> str:
     """Return the URL of theiphonewiki to parse."""
     wiki = "https://www.theiphonewiki.com"
-    data = {"search": buildnum + " " + device}
+    data = {"search": build + " " + device}
     response = requests.get(wiki + "/w/index.php", params=data)
     html = response.text
-    link = re.search(r"\/wiki\/.*_" + buildnum + r"_\(" + device + r"\)", html)
+    link = re.search(r"\/wiki\/.*_" + build + r"_\(" + device + r"\)", html)
     if link is not None:
         pagelink = wiki + link.group()
     else:
@@ -19,9 +20,9 @@ def getfirmwarekeyspage(device: str, buildnum: str) -> str:
     return pagelink
 
 
-def getkeys(device: str, buildnum: str, img_file: str = None) -> str:
+def getkeys(device: str, build: str, img_file: str = None) -> str:
     """Return a json or str."""
-    pagelink = getfirmwarekeyspage(device, buildnum)
+    pagelink = get_fw_keys_page(device, build)
     if pagelink is None:
         return None
 
