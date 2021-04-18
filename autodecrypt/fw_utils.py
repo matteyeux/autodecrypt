@@ -10,6 +10,8 @@ from remotezip import RemoteZip
 
 def grab_file(url: str, filename: str) -> str:
     """Partialzip file from remote server."""
+    if "developer.apple.com" in url:
+        return None
     with RemoteZip(url) as zipfile:
         filenames = zipfile.namelist()
         for fname in filenames:
