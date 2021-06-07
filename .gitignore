@@ -2,6 +2,7 @@ __pycache__/
 .eggs
 
 *.img3
+*.bin
 *.im4p
 *.dec
 env

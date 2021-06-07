@@ -3,10 +3,11 @@ import logging
 import os
 from typing import Tuple
 
-from autodecrypt import decrypt_img
-from autodecrypt import fw_utils
-from autodecrypt import pongo
-from autodecrypt import scrapkeys
+import decrypt_img
+import fw_utils
+import pongo
+import scrapkeys
+
 
 logging.basicConfig(
     filename="/tmp/autodecrypt.log",
@@ -46,7 +47,8 @@ def get_firmware_keys(device: str, build: str, img_file: str, image_type: str):
         ivkey = scrapkeys.getkeys(device, build, img_file)
 
     if ivkey is None:
-        print("[e] unable to get keys for {}/{}".format(device, build))
+        board=img_file.split("iBSS.")[1].split(".RELEASE")[0]
+        print("[e] unable to get keys for {}/{} using board {}".format(device, build,board))
         return None
     return ivkey
 
@@ -74,18 +76,51 @@ def get_ipsw_url(device, ios_version, build):
         print("[w] could not get IPSW url, exiting...")
     return fw_url
 
+def get_board_name(parser: argparse.Namespace, json_data: dict) -> str:
+    fw_url = get_fw_ipsw_url(parser, json_data)
+    board_names = fw_utils.collect_all_board_names(fw_url, parser.img_file)
 
-def download_file(parser: argparse.Namespace, json_data: dict) -> str:
+    return board_names
+
+def board_filter(parser: argparse.Namespace, json_data: dict, build: str) -> str:
+    "Checking for multiple boards"
+    board_names = get_board_name(parser, json_data)
+
+    if len(board_names) > 1:
+        board_names_short=', '.join([str(x.split("{}.".format(parser.img_file))[1].split(".RELEASE")[0]) for x in board_names])
+        print("Found multiple boards: {}".format(board_names_short))
+
+    image_name = parser.img_file
+
+    if image_name is None:
+        print("[e] image type not found")
+
+    for board in board_names:
+        ivkey_tmp = scrapkeys.getkeys(parser.device, build, board)
+
+        if ivkey_tmp is None:
+            board_tmp_name=board.split("{}.".format(parser.img_file))[1].split(".RELEASE")[0]
+            print("Eliminating board {} as it's not valid for device".format(board_tmp_name))
+            board_names.remove(board)
+
+    return board_names
+
+def get_fw_ipsw_url(parser: argparse.Namespace, json_data: dict) -> str:
     """Download file from IPSW or OTA."""
     fw_url = fw_utils.get_firmware_url(json_data, parser.build)
     if fw_url is None:
         print("[w] could not get OTA url, trying with IPSW url")
         fw_url = get_ipsw_url(parser.device, parser.ios_version, parser.build)
+    return fw_url
+
+
+def download_file(parser: argparse.Namespace, json_data: dict, board: str) -> str:
+    fw_url = get_fw_ipsw_url(parser,json_data)
 
     if fw_url is None:
         return None
 
-    img_file = fw_utils.grab_file(fw_url, parser.img_file)
+    img_file = fw_utils.grab_file(fw_url, parser.img_file, board)
     return img_file
 
 

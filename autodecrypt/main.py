@@ -3,9 +3,9 @@
 """Main module for autodecrypt."""
 import argparse
 
-from autodecrypt import decrypt_img
-from autodecrypt import fw_utils
-from autodecrypt import utils
+import decrypt_img
+import fw_utils
+import utils
 
 
 __author__ = "matteyeux"
@@ -72,11 +72,20 @@ def main():
     if build is None:
         build = fw_utils.get_build_id(json_data, parser.ios_version)
 
+    board_filename=utils.board_filter(parser, json_data, build)
+
+    if len(board_filename) > 1:
+        print("Too many boards, exiting")
+        return -1
+    else:
+        board_filename = board_filename[0]
+        print("Identified unique board as: {}".format(board_filename))
+
     if parser.local is False:
         if parser.beta is True:
             img_file = utils.download_beta_file(parser, json_data)
         else:
-            img_file = utils.download_file(parser, json_data)
+            img_file = utils.download_file(parser, json_data, board_filename)
 
     if img_file is None:
         print("[e] could not grab file")

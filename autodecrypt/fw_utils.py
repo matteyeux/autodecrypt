@@ -8,20 +8,20 @@ from bs4 import BeautifulSoup
 from remotezip import RemoteZip
 
 
-def grab_file(url: str, filename: str) -> str:
+def grab_file(url: str, filename: str, board_filename: str) -> str:
     """Partialzip file from remote server."""
     if "developer.apple.com" in url:
         return None
     with RemoteZip(url) as zipfile:
         filenames = zipfile.namelist()
-        for fname in filenames:
-            zinfo = zipfile.getinfo(fname)
-            if filename in zinfo.filename and ".plist" not in zinfo.filename:
-                filename = zinfo.filename.split("/")[-1]
-                print("[i] downloading %s" % filename)
-                extract_and_clean(zipfile, zinfo.filename, filename)
-                return filename
-        return filename
+        matching = [s for s in filenames if s.endswith(board_filename)]
+        if len(matching) != 0:
+            filename = board_filename
+            print("[i] downloading %s" % filename)
+            extract_and_clean(zipfile, matching[0], filename)
+            return filename
+        else:
+            return None
 
 
 def extract_and_clean(zipper: str, zip_path: str, filename: str):
@@ -147,3 +147,17 @@ def get_beta_url(model, build, version):
         if found is True and all(x in href for x in matches):
             return href
     return None
+
+def collect_all_board_names(url: str, filename: str) -> str:
+    """Partialzip file from remote server."""
+    if "developer.apple.com" in url:
+        return None
+    filename_array = []
+    with RemoteZip(url) as zipfile:
+        filenames = zipfile.namelist()
+        for fname in filenames:
+            zinfo = zipfile.getinfo(fname)
+            if filename in zinfo.filename and ".plist" not in zinfo.filename:
+                filename_current = zinfo.filename.split("/")[-1]
+                filename_array.append(filename_current)
+        return filename_array
