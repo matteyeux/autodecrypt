@@ -9,7 +9,3 @@ autodecrypt -d iPhone11,8 -i 13.4 -f sep-firmware -k 46d48ecd42ae0b76a698eacf844
 
 echo "=== beta firmware ==="
 autodecrypt -d iPhone9,3 -b 18D5043d -f iBoot.d10.RELEASE.im4p -i 14.4 --beta
-
-echo "=== foreman ==="
-export FOREMAN_HOST="https://foreman-public.sudosecuritygroup.com"
-autodecrypt -f LLB -i 13.2.3 -d iPod9,1

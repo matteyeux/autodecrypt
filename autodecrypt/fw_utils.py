@@ -65,9 +65,9 @@ def get_image_type_name(image: str) -> str:
     return None
 
 
-def get_json_data(model: str, fw_type: str = "ota") -> dict:
+def get_json_data(model: str, fw_type: str = None) -> dict:
     """Setup json data to parse."""
-    url = "https://api.ipsw.me/v4/device/" + model
+    url = f"https://api.ipsw.me/v4/device/{model}"
     if fw_type == "ota":
         url += "?type=ota"
     resp = requests.get(url=url)
@@ -87,10 +87,9 @@ def get_board_config(json_data: dict) -> str:
     return json_data["boardconfig"]
 
 
-def get_build_id(json_data: dict, ios_vers: str, fw_type: str = "ota") -> str:
+def get_build_id(json_data: dict, ios_vers: str, fw_type: str = "ipsw") -> str:
     """Return build ID of iOS version."""
     release = ""
-
     if ios_vers is None:
         print("[e] no iOS version specified")
         return sys.exit(1)
@@ -100,7 +99,7 @@ def get_build_id(json_data: dict, ios_vers: str, fw_type: str = "ota") -> str:
         if fw_type == "ota":
             release = firmware["releasetype"]
 
-        if ios_vers in curent_vers and release == "":
+        if ios_vers == curent_vers and release == "":
             return firmware["buildid"]
 
 

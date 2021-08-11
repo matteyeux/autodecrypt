@@ -12,8 +12,10 @@ def get_image_type(filename: str):
         sys.exit(-1)
     with open(filename, "rb") as file:
         file.seek(7, 0)
-        magic = file.read(4)
-        if magic == b"IM4P":
+        magic = file.read(4).decode()
+        if "M4P" in magic:
+            if magic != "IM4P":
+                file.seek(-1, os.SEEK_CUR)
             magic = "img4"
         else:
             return None
@@ -33,14 +35,16 @@ def decrypt_img(infile: str, magic: str, key: str, init_vector: str):
     if magic == "img4":
         print("[i] decrypting %s to %s..." % (infile, outfile))
         fnull = open(os.devnull, "w")
+        ivkey = ""
+        if key is None and init_vector is None:
+            command = ["img4", "-i", infile, outfile]
+        else:
+            ivkey = init_vector + key
+            command = ["img4", "-i", infile, outfile, ivkey]
 
-        ivkey = init_vector + key
         logging.info("img4 -i %s %s %s", infile, outfile, ivkey)
-
         try:
-            subprocess.Popen(
-                ["img4", "-i", infile, outfile, ivkey], stdout=fnull
-            )
+            subprocess.Popen(command, stdout=fnull)
         except FileNotFoundError:
             print("[e] can't decrypt file, is img4 tool in $PATH ?")
             sys.exit(1)

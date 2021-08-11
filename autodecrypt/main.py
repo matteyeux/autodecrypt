@@ -49,7 +49,13 @@ def parse_arguments():
         action="store_true",
         help="don't download firmware image",
     )
-    parser.add_argument("-k", "--key", dest="ivkey", help="specify iv + key")
+    parser.add_argument(
+        "-k",
+        "--key",
+        dest="ivkey",
+        help="specify iv + key, specifying -k 0 will only \
+             extract payload without decrypting",
+    )
     parser.add_argument(
         "--download", action="store_true", help="download firmware image"
     )
@@ -99,9 +105,12 @@ def main():
     if ivkey is None:
         return
 
-    iv, key = utils.split_key(ivkey)
-    print("[x] iv  : %s" % iv)
-    print("[x] key : %s" % key)
+    iv, key = None, None
+
+    if ivkey != '0':
+        iv, key = utils.split_key(ivkey)
+        print("[x] iv  : %s" % iv)
+        print("[x] key : %s" % key)
 
     decrypt_img.decrypt_img(img_file, magic, key, iv)
     print("[x] done")
