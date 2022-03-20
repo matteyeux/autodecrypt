@@ -1,3 +1,4 @@
+# /!\ A new version of autodecrypt has been rewritten in Rust : [taco](https://github.com/matteyeux/taco) /!\
 # autodecrypt
 [![PyPI version](https://badge.fury.io/py/autodecrypt.svg)](https://badge.fury.io/py/autodecrypt)
 
