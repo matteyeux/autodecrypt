@@ -1,4 +1,3 @@
-# /!\ A new version of autodecrypt has been rewritten in Rust : [taco](https://github.com/matteyeux/taco) /!\
 # autodecrypt
 [![PyPI version](https://badge.fury.io/py/autodecrypt.svg)](https://badge.fury.io/py/autodecrypt)
 
@@ -10,24 +9,24 @@ autodecrypt will grab keys for you and decrypt the firmware image you want.
 
 ## Usage
 ```
-usage: autodecrypt [-h] -f IMG_FILE -d DEVICE [-i IOS_VERSION] [-b BUILD] [-p] [-l] [-k IVKEY] [--download] [--beta]
+Usage: autodecrypt [OPTIONS]
 
-optional arguments:
-  -h, --help            show this help message and exit
-  -f IMG_FILE, --file IMG_FILE
-                        img file you want to decrypt
-  -d DEVICE, --device DEVICE
-                        device ID (eg : iPhone8,1)
-  -i IOS_VERSION, --ios IOS_VERSION
-                        iOS version for the said file
-  -b BUILD, --build BUILD
-                        build ID to set instead of iOS version
-  -p, --pongo           use PongoOS over USB for decryption
-  -l, --local           don't download firmware image
-  -k IVKEY, --key IVKEY
-                        specify iv + key
-  --download            download firmware image
-  --beta                specify beta firmware
+Options:
+  -f, --filename TEXT             File  [required]
+  -d, --device TEXT               Device  [required]
+  -i, --ios_version TEXT          iOS version
+  -b, --build TEXT                Build ID of iOS version
+  -k, --ivkey TEXT                IV and key to decrypt file
+  -l, --local                     Use path to local file
+  -D, --download                  Download file
+  -B, --beta                      Specify that it is a beta firmware
+  -P, --pongo                     Use PongoOS over USB for decryption
+  --install-completion [bash|zsh|fish|powershell|pwsh]
+                                  Install completion for the specified shell.
+  --show-completion [bash|zsh|fish|powershell|pwsh]
+                                  Show completion for the specified shell, to
+                                  copy it or customize the installation.
+  --help                          Show this message and exit.
 ```
 
 ## Dependencies
@@ -47,7 +46,7 @@ To run autodecrypt, use poetry with a virtualenv:
 
 #### Download and decrypt iBSS using keys from theiphonewiki
 ```
-» autodecrypt -f iBSS -i 10.3.3 -d iPhone6,2
+» autodecrypt -f iBSS.iphone6.RELEASE.im4p -i 10.3.3 -d iPhone6,2
 [i] downloading iBSS.iphone6.RELEASE.im4p
 [i] image : ibss
 [i] grabbing keys for iPhone6,2/14G60
@@ -59,7 +58,7 @@ To run autodecrypt, use poetry with a virtualenv:
 
 #### Download and decrypt SEP firmware by specifying keys
 ```
-» autodecrypt -f sep-firmware -b 17C5053a -d iPhone11,8 -k 9f974f1788e615700fec73006cc2e6b533b0c6c2b8cf653bdbd347bc1897bdd66b11815f036e94c951250c4dda916c00
+» autodecrypt -f sep-firmware.n841.RELEASE.im4p -b 17C5053a -d iPhone11,8 -k 9f974f1788e615700fec73006cc2e6b533b0c6c2b8cf653bdbd347bc1897bdd66b11815f036e94c951250c4dda916c00
 [i] downloading sep-firmware.n841.RELEASE.im4p
 [x] iv  : 9f974f1788e615700fec73006cc2e6b5
 [x] key : 33b0c6c2b8cf653bdbd347bc1897bdd66b11815f036e94c951250c4dda916c00
@@ -70,7 +69,7 @@ To run autodecrypt, use poetry with a virtualenv:
 #### Use [foreman](https://github.com/GuardianFirewall/foreman) instance to grab firmware keys
 ```
 » export FOREMAN_HOST="https://foreman-public.sudosecuritygroup.com"
-» autodecrypt -f LLB -i 13.2.3 -d iPod9,1
+» autodecrypt -f LLB.n112.RELEASE.im4p -i 13.2.3 -d iPod9,1
 [i] downloading LLB.n112.RELEASE.im4p
 [i] image : llb
 [i] grabbing keys for iPod9,1/17B111
@@ -85,7 +84,7 @@ To run autodecrypt, use poetry with a virtualenv:
 > I you wanna use this on Linux, you may have some USB permissions. I recommend copying the file `66-pongos.rules` available on this repository to `/etc/udev/rules.d/`.
 
 ```
-» autodecrypt -f iBoot -d iPhone8,1 -i 14.1 -p
+» autodecrypt -f iBoot.n71.RELEASE.im4p -d iPhone8,1 -i 14.1 -p
 [i] downloading iBoot.n71.RELEASE.im4p
 [i] grabbing keys from PongoOS device
 [i] kbag : 03C9E01CA99FE6475566C791777169C0625B04B7BD4E593DE0F61ABF4E8DB1A987D9D6155C5A1F41D9113694658AC61C
@@ -99,7 +98,7 @@ To run autodecrypt, use poetry with a virtualenv:
 
 For debugging purposes you can check `autodecrypt.log` :
 ```
-11/02/2019 21:39:41 Launching "['autodecrypt/autodecrypt.py', '-d', 'iPhone9,3', '-f', 'iBoot', '-i', '12.3.1']"
+11/02/2019 21:39:41 Launching "['autodecrypt/autodecrypt.py', '-d', 'iPhone9,3', '-f', 'iBoot.d10.RELEASE.im4p', '-i', '12.3.1']"
 11/02/2019 21:39:41 requesting IPSW's API for iPhone9,3
 11/02/2019 21:39:41 done, now looking for version or build
 11/02/2019 21:39:41 grabbing firmware codename for 16F203
@@ -112,6 +111,5 @@ For debugging purposes you can check `autodecrypt.log` :
 
 ### Credits
 - checkra1n team for AES patches, kbag.m and [PongoOS](https://github.com/checkra1n/pongoos)
-- kennytm for img3 stuff (removed for the moment)
-- xerub for [img4](https://github.com/xerub/img4lib)
 - tihmstar for wiki parsing ([my method](https://github.com/matteyeux/ios-tools/blob/master/scrapkeys.py) was pretty bad)
+- m1stadev for [PyIMG4](https://github.com/m1stadev/PyIMG4)

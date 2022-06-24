@@ -35,36 +35,6 @@ def extract_and_clean(zipper: str, zip_path: str, filename: str):
         shutil.rmtree(zip_path.split("/")[0])
 
 
-IMAGE_TYPES = [
-    ["ogol", "logo", "applelogo"],
-    ["0ghc", "chg0", "batterycharging0"],
-    ["1ghc", "chg1", "batterycharging1"],
-    ["Ftab", "batF", "Ftab"],
-    ["Ftab", "batF", "batteryfull"],
-    ["0tab", "bat0", "batterylow0"],
-    ["1tab", "bat1", "batterylow1"],
-    ["ertd", "dtre", "devicetree"],
-    ["Cylg", "glyC", "glyphcharging"],
-    ["Pylg", "glyP", "glyphplugin"],
-    ["tobi", "ibot", "iboot"],
-    ["blli", "illb", "llb"],
-    ["ssbi", "ibss", "ibss"],
-    ["cebi", "ibec", "ibec"],
-    ["lnrk", "krnl", "kernelcache"],
-    ["sepi", "sepi", "sepfirmware"],
-]
-
-
-def get_image_type_name(image: str) -> str:
-    """Get image name."""
-    image = image.decode("utf-8")
-    for i, _ in enumerate(IMAGE_TYPES):
-        if image in (IMAGE_TYPES[i][0], IMAGE_TYPES[i][1]):
-            img_type = str(IMAGE_TYPES[i][2])
-            return img_type
-    return None
-
-
 def get_json_data(model: str, fw_type: str = None) -> dict:
     """Setup json data to parse."""
     url = f"https://api.ipsw.me/v4/device/{model}"
@@ -104,7 +74,7 @@ def get_build_id(json_data: dict, ios_vers: str, fw_type: str = "ipsw") -> str:
 
 
 def get_ios_vers(json_data: dict, buildid: str) -> str:
-    """"Return iOS version of build ID."""
+    """Return iOS version of build ID."""
     if json_data is None:
         return None
     for firmware in json_data["firmwares"]:
@@ -133,10 +103,10 @@ def get_beta_url(model, build, version):
         f"https://www.theiphonewiki.com/wiki/Beta_Firmware/iPhone/{major}"
     )
     html_text = requests.get(wiki_url).text
-    soup = BeautifulSoup(html_text, 'html.parser')
+    soup = BeautifulSoup(html_text, "html.parser")
     found = False
     for link in soup.find_all('a'):
-        href = link.get('href')
+        href = link.get("href")
         if href is None:
             continue
 

@@ -102,7 +102,7 @@ def get_build_id(json_data: dict, ios_vers: str, fw_type: str = "ota") -> str:
 
 
 def get_ios_vers(json_data: dict, buildid) -> str:
-    """"Return iOS version of build ID."""
+    """ "Return iOS version of build ID."""
     if json_data is None:
         return None
     for i in range(0, len(json_data["firmwares"])):

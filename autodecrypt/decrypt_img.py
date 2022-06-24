@@ -1,12 +1,38 @@
 """Module used for decrypting and extracting img4 file format"""
-import logging
 import os
-import subprocess
 import sys
+import subprocess
+import pyimg4
+from pyimg4 import Compression, Keybag
+
+
+def decrypt_img(infile: str, magic: str, iv: str, key: str) -> int:
+    """Decrypt IM4P file. This code is mostly copy/pasta from PyIMG4."""
+    file = open(infile, 'rb').read()
+    im4p = pyimg4.IM4P(file)
+
+    if im4p.payload.encrypted is False:
+        print("[i] payload is not encrypted")
+        return 0
+
+    if iv is None or key is None:
+        print("[e] iv or key is None")
+        return -1
+
+    outfile = infile.replace("im4p", "bin")
+    print(f"[i] decrypting {infile} to {outfile}...")
+
+    im4p.payload.decrypt(Keybag(key=key, iv=iv))
+    if im4p.payload.compression not in (Compression.NONE, Compression.UNKNOWN):
+        print('[i] image4 payload data is compressed, decompressing...')
+        im4p.payload.decompress()
+
+    open(outfile, 'wb').write(im4p.payload.output().data)
+    return 0
 
 
 def get_image_type(filename: str):
-    """Check if it is IMG4 format."""
+    """Check if it is IM4P format."""
     if not os.path.isfile(filename):
         print("[e] %s : file not found" % filename)
         sys.exit(-1)
@@ -22,35 +48,6 @@ def get_image_type(filename: str):
         file.seek(2, os.SEEK_CUR)
         img_type = file.read(4)
         return magic, img_type
-
-
-def decrypt_img(infile: str, magic: str, key: str, init_vector: str):
-    """Decrypt IMG4 image file."""
-    image_type = get_image_type(infile)
-    if image_type is None:
-        print("[e] %s is not an IMG4 file" % infile)
-        sys.exit(1)
-
-    outfile = infile.replace("im4p", "bin")
-    if magic == "img4":
-        print("[i] decrypting %s to %s..." % (infile, outfile))
-        fnull = open(os.devnull, "w")
-        ivkey = ""
-        if key is None and init_vector is None:
-            command = ["img4", "-i", infile, outfile]
-        else:
-            ivkey = init_vector + key
-            command = ["img4", "-i", infile, outfile, ivkey]
-
-        logging.info("img4 -i %s %s %s", infile, outfile, ivkey)
-        try:
-            subprocess.Popen(command, stdout=fnull)
-        except FileNotFoundError:
-            print("[e] can't decrypt file, is img4 tool in $PATH ?")
-            sys.exit(1)
-    else:
-        print("{} is not supported".format(magic))
-        return
 
 
 def get_kbag(firmware_image: str) -> str:
