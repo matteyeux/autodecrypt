@@ -91,28 +91,49 @@ def get_build_list(json_data: dict) -> list:
     return builds
 
 
-def get_beta_url(model, build, version):
+def get_device(model: str) -> list:
+    """Get device according to its model.
+    This function returns a list because there are multiple section for iPads.
+    """
+    device = []
+    if "AppleTV" in model:
+        device = "Apple_TV"
+    elif "Watch" in model:
+        device = "Apple_Watch"
+    elif "AudioAccessory" in model:
+        device = "HomePod"
+    elif "Mac" in model:
+        device = "Mac"
+    elif "iPad" in model:
+        device = ["iPad", "iPad_Air", "iPad_Pro", "iPad_mini"]
+    elif "iPod" in model:
+        device = "iPod_touch"
+    return device
+
+
+def get_beta_url(model: str, build: str, version: str):
     """Get iOS beta URL from theiphonewiki."""
 
     major = f"{version.split('.')[0]}.x"
     matches = [build, 'Restore']
 
-    # URL should look like :
-    # https://www.theiphonewiki.com/wiki/Beta_Firmware/iPhone/14.x
-    wiki_url = (
-        f"https://www.theiphonewiki.com/wiki/Beta_Firmware/iPhone/{major}"
-    )
-    html_text = requests.get(wiki_url).text
-    soup = BeautifulSoup(html_text, "html.parser")
-    found = False
-    for link in soup.find_all('a'):
-        href = link.get("href")
-        if href is None:
-            continue
+    device = get_device(model)
+    for dev in device:
+        # URL should look like :
+        # https://www.theiphonewiki.com/wiki/Beta_Firmware/iPhone/14.x
+        wiki_url = (
+            f"https://www.theiphonewiki.com/wiki/Beta_Firmware/{dev}/{major}"
+        )
+        html_text = requests.get(wiki_url).text
+        soup = BeautifulSoup(html_text, "html.parser")
+        found = False
+        for link in soup.find_all('a'):
+            href = link.get("href")
+            if href is None:
+                continue
+            if model in href:
+                found = True
 
-        if model in href:
-            found = True
-
-        if found is True and all(x in href for x in matches):
-            return href
+            if found is True and all(x in href for x in matches):
+                return href
     return None

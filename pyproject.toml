@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "autodecrypt"
-version = "2.3.1"
+version = "2.3.2"
 description = "Tool to decrypt iOS firmware images"
 authors = ["matteyeux"]
 license = "MIT"
