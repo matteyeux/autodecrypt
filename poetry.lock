@@ -190,7 +190,7 @@ test = ["appdirs (==1.4.4)", "pytest-cov (>=2.7)", "pytest-mock (>=3.6)", "pytes
 
 [[package]]
 name = "pre-commit"
-version = "2.19.0"
+version = "2.20.0"
 description = "A framework for managing and maintaining multi-language pre-commit hooks."
 category = "dev"
 optional = false
@@ -433,7 +433,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "c3bc6e8c0f09805b409cc3d996869ff90f73ad2bd56c48e7030767ff51bd4ee3"
+content-hash = "02c6c56d3524fc654eb002e666621a0057964080f472c6f44ba2c3e628506281"
 
 [metadata.files]
 asn1 = []
