@@ -223,7 +223,7 @@ python-versions = ">=3.6"
 
 [[package]]
 name = "pyimg4"
-version = "0.6.2"
+version = "0.6.3"
 description = "A Python library/CLI tool for parsing Apple's Image4 format."
 category = "main"
 optional = false
@@ -617,8 +617,8 @@ pygments = [
     {file = "Pygments-2.12.0.tar.gz", hash = "sha256:5eb116118f9612ff1ee89ac96437bb6b49e8f04d8a13b514ba26f620208e26eb"},
 ]
 pyimg4 = [
-    {file = "pyimg4-0.6.2-py3-none-any.whl", hash = "sha256:6e8b64c2c26e4d681d2a567a59e39aa38311224b5f7603a479ced79e7f8ca673"},
-    {file = "pyimg4-0.6.2.tar.gz", hash = "sha256:9568cfa6881592cfca5f5b9ccb3c1bad8e6954b442ac1214f1aab60be9cea3b9"},
+    {file = "pyimg4-0.6.3-py3-none-any.whl", hash = "sha256:9c03ab7b57c4d790780eedb934578844380cbd8fe7b923703619da42bf08337a"},
+    {file = "pyimg4-0.6.3.tar.gz", hash = "sha256:dc5bdba410bab2e0ae9d6b09191aa6ef01f5bb4a6e9057fd09475d1feac5a41f"},
 ]
 pyliblzfse = [
     {file = "pyliblzfse-0.4.1-cp36-cp36m-macosx_10_6_intel.whl", hash = "sha256:69439a557a2979f18b816f7ccfcfdd2dc2021612811213ab569d0b35f1a04c22"},
