@@ -23,7 +23,7 @@ def decrypt_img(infile: str, magic: str, iv: str, key: str) -> int:
     print(f"[i] decrypting {infile} to {outfile}...")
 
     im4p.payload.decrypt(Keybag(key=key, iv=iv))
-    if im4p.payload.compression not in (Compression.NONE, Compression.UNKNOWN):
+    if im4p.payload.compression != Compression.NONE:
         print('[i] image4 payload data is compressed, decompressing...')
         im4p.payload.decompress()
 
