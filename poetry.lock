@@ -282,7 +282,7 @@ python-versions = ">=3.6"
 
 [[package]]
 name = "remotezip"
-version = "0.10.0"
+version = "0.11.1"
 description = "Access zip file content hosted remotely without downloading the full file."
 category = "main"
 optional = false
@@ -433,7 +433,7 @@ testing = ["func-timeout", "jaraco.itertools", "pytest (>=6)", "pytest-black (>=
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "ed1d8542881d52cb1150625801e8092c718be874aadaa943076cc97ac3de5377"
+content-hash = "62d2551b68b4ffd1a2b55b9ff4132a8c7ca3b400391d2833a9233f1506f7f30f"
 
 [metadata.files]
 asn1 = [
@@ -691,7 +691,7 @@ pyyaml = [
     {file = "PyYAML-6.0.tar.gz", hash = "sha256:68fb519c14306fec9720a2a5b45bc9f0c8d1b9c72adf45c37baedfcd949c35a2"},
 ]
 remotezip = [
-    {file = "remotezip-0.10.0.tar.gz", hash = "sha256:451558348ef005d310e54a8a0f6cefbfed364f5dc52d798503314812ba8cc012"},
+    {file = "remotezip-0.11.1.tar.gz", hash = "sha256:881a012238bd35c9dbf0e24071c1573403a4c9e260c7de5cd9caf8c5fe63fcb2"},
 ]
 requests = [
     {file = "requests-2.28.0-py3-none-any.whl", hash = "sha256:bc7861137fbce630f17b03d3ad02ad0bf978c844f3536d0edda6499dafce2b6f"},
